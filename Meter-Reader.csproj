@@ -9,7 +9,29 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\MeterPhotos\" />
+    <Content Include="MeterPhotos\artificialMeter27.png" />
+    <Content Include="MeterPhotos\artificialMeter28.png" />
+    <Content Include="MeterPhotos\artificialMeter30.png" />
+    <Content Include="MeterPhotos\artificialMeter31.png" />
+    <Content Include="MeterPhotos\artificialMeter33.png" />
+    <Content Include="MeterPhotos\artificialMeter34.png" />
+    <Content Include="MeterPhotos\artificialMeter36.png" />
+    <Content Include="MeterPhotos\artificialMeter37.png" />
+    <Content Include="MeterPhotos\artificialMeter39.png" />
+    <Content Include="MeterPhotos\artificialMeter41.png" />
+    <Content Include="MeterPhotos\artificialMeter42.png" />
+    <Content Include="MeterPhotos\artificialMeter44.png" />
+    <Content Include="MeterPhotos\artificialMeter45.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="MeterPhotos\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="IronOcr" Version="2023.12.34" />
+    <PackageReference Include="OpenCvSharp4" Version="4.8.0.20230708" />
+    <PackageReference Include="OpenCvSharp4.runtime.win" Version="4.8.0.20230708" />
   </ItemGroup>
 
 </Project>
