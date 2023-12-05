@@ -1,7 +1,27 @@
 ﻿@page "/"
 
+@using IronPython
+@using IronPython.Hosting
+@using Microsoft.Scripting
+@using Microsoft.Scripting.Hosting
+
+
 <PageTitle>Home</PageTitle>
 
 <h1>Hello, world!</h1>
 
 Welcome to your new app.
+
+@code{
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        PythonDemo();
+    }
+
+    private void PythonDemo(){
+        ScriptEngine engine = Python.CreateEngine();
+        var searchPaths = engine.GetSearchPaths();
+        searchPaths.Add(@"Python");
+    }
+}

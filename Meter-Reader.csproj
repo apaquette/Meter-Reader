@@ -26,6 +26,11 @@
 
   <ItemGroup>
     <Folder Include="MeterPhotos\" />
+    <Folder Include="Python\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="IronPython" Version="3.4.1" />
   </ItemGroup>
 
 </Project>
