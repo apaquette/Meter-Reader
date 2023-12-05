@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34316.72
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Meter-Reader", "Meter-Reader.csproj", "{0274B226-F942-4C52-A5F3-23A4C93AF6EC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0274B226-F942-4C52-A5F3-23A4C93AF6EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0274B226-F942-4C52-A5F3-23A4C93AF6EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0274B226-F942-4C52-A5F3-23A4C93AF6EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0274B226-F942-4C52-A5F3-23A4C93AF6EC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {37C4ABA9-433D-46F8-8D14-2F85BD838612}
+	EndGlobalSection
+EndGlobal
