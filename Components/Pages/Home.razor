@@ -19,9 +19,32 @@ Welcome to your new app.
         PythonDemo();
     }
 
+    //https://www.youtube.com/watch?v=MaCqzJCcA7g
     private void PythonDemo(){
         ScriptEngine engine = Python.CreateEngine();
+
         var searchPaths = engine.GetSearchPaths();
-        searchPaths.Add(@"Python");
+        searchPaths.Clear();
+        var path = Directory.GetCurrentDirectory();
+        searchPaths.Add($"{path}\\Python");
+        engine.SetSearchPaths(searchPaths);
+
+        var scope = engine.CreateScope();
+        scope.SetVariable("x", 10);
+
+        //var source = engine.CreateScriptSourceFromString("code", SourceCodeKind.Statements);
+        var source = engine.CreateScriptSourceFromFile(searchPaths.First());
+
+        var compilation = source.Compile();
+        var result = compilation.Execute(scope);
+
+        foreach(var varName in scope.GetVariableNames())
+        {
+            Console.WriteLine($"Variable: {varName}, Value: {scope.GetVariable(varName)}");
+
+            if(varName == "xy"){
+                Console.WriteLine($"xy(): {scope.GetVariable(varName)()}");
+            }
+        }
     }
 }
