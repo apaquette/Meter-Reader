@@ -6,6 +6,8 @@ public class Meter
 
     public string SerialNumber { get; }
 
+    public string Address { get; set; }
+
     public Meter(Microcontroller controller, string serialNumber)
     {
         microcontroller = controller;
