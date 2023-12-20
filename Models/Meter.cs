@@ -23,8 +23,10 @@ public class Meter
         return new();
     }
 
-    public void AssignMicrocontroller(Microcontroller controller)
+    //TODO: Implement Assignment method
+    public MicrocontrollerAssignment AssignMicrocontroller(Microcontroller controller)
     {
         microcontroller = controller;
+        return new();
     }
 }
