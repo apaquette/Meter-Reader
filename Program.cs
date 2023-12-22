@@ -1,4 +1,4 @@
-using Meter_Reader.Components;
+using EnergyInsightHub.Components;
 
 var builder = WebApplication.CreateBuilder(args);
 

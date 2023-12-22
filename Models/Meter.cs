@@ -1,4 +1,4 @@
-﻿namespace MeterReader.Models;
+﻿namespace EnergyInsightHub.Models;
 
 public class Meter
 {

@@ -1,4 +1,4 @@
-﻿namespace MeterReader.Models;
+﻿namespace EnergyInsightHub.Models;
 
 //TODO: need to check if the microcontroller is already assigned, if it is, mark the previous one as the endDate
 public class MicrocontrollerAssignment
