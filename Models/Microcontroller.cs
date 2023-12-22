@@ -6,10 +6,12 @@ namespace EnergyInsightHub.Models;
 public class Microcontroller
 {
     [Key]
-    public int Id { get; set; }
-    public Meter? CurrentMeter { get; set; }
-    public List<Reading> Readings { get; set; } = new();
-    public List<MicrocontrollerAssignment> Assignments { get; set; } = new();
+    public int Id { get; private set; }
+    public Meter? CurrentMeter { get; private set; }
+    public List<Reading> Readings { get; private set; } = new();
+    public List<MicrocontrollerAssignment> Assignments { get; private set; } = new();
+
+    public Microcontroller() { } // Parameterless constructor for Entity Framework
 
 
     public List<Reading> GetReadings(Meter meter)
