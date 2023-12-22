@@ -1,24 +1,20 @@
 # import the necessary packages
 import pytesseract
 import cv2
-
+import os
 import sqlite3
 from sqlite3 import Error
 
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR/tesseract.exe'
 
-# # load the input image, convert it from BGR to RGB channel ordering,
-# # and initialize our Tesseract OCR options as an empty string
-# image = cv2.imread("artificialMeter27.png")
-# crop_image = image[415:485, 385:665]
-# rgb = cv2.cvtColor(crop_image, cv2.COLOR_BGR2RGB)
-# options = "" #"outputbase digits"
-# # OCR the input image using Tesseract
-# text = pytesseract.image_to_string(rgb, config=options)
-# print(text)
+### GET DATABASE FILE
+current_directory = os.getcwd()
+relative_path = os.path.join('..', '..')
+absolute_path = os.path.abspath(os.path.join(current_directory, relative_path))
+database = absolute_path + r'\EnergyInsightHub\Data\EnergyHub.db'
+meterPhotos = absolute_path + r'\ArtificialMeters'
 
-database = r'D:\SETU\Project C4\Remote Energy Meter\Meter Reader\Meter-Reader\Data\EnergyHub.db'
-
+###CREATE CONNECTION WITH DATEABASE FILE
 def create_connection(db_file):
     """ create a database connection to the SQLite database
         specified by db_file
@@ -34,10 +30,29 @@ def create_connection(db_file):
     return conn
 
 def insert_reading(conn, reading):
-    sql = ''' INSERT INTO tasks(name,priority,status_id,project_id,begin_date,end_date)
-              VALUES(?,?,?,?,?,?) '''
+    sql = ''' INSERT INTO Readings(EnergyMeterId,MicrocontrollerId,Time,Amount)
+              VALUES(?,?,?,?) '''
+    cur = conn.cursor()
+    cur.execute(sql, reading)
+    conn.commit()
+ 
+### CURRENT READ METER ALGORITHM
+def read_meter(meterPhoto):
+    image = cv2.imread("artificialMeter27.png")
+    crop_image = image[415:485, 385:665]
+    rgb = cv2.cvtColor(crop_image, cv2.COLOR_BGR2RGB)
+    options = "" #"outputbase digits"
+    # OCR the input image using Tesseract
+    return pytesseract.image_to_string(rgb, config=options)
 
 conn = create_connection(database)
+
+with conn:
+    newReading = (0,0,"2023-12-22 15:54:41", 30.0)
+    insert_reading(conn, newReading)
+
+
+
 
 ###OLD SOLUTION
 # import the necessary packages

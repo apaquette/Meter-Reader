@@ -16,7 +16,7 @@
 @code{
     protected async void Generate()
     {
-        Reading dummyReading = new() { Time = new DateTime(), EnergyMeterId = 0, MicrocontrollerId = 0, Amount = 30 };
+        Reading dummyReading = new() { Time = DateTime.Now, EnergyMeterId = 0, MicrocontrollerId = 0, Amount = 30 };
         var _context = await EnergyHubContextFactory.CreateDbContextAsync();
         if (_context != null)
         {
