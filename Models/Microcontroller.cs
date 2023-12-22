@@ -13,7 +13,7 @@ public class Microcontroller
 
     public Microcontroller() { } // Parameterless constructor for Entity Framework
 
-    public List<Reading> GetReadings(Meter meter) => Readings.Where(r => r.EnergyMeter == meter).ToList();
+    //public List<Reading> GetReadings(Meter meter) => Readings.Where(r => r.EnergyMeter == meter).ToList();
 
     //TODO: Implement
     public void AssignToMeter(Meter meter)

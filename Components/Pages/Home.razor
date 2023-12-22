@@ -1,10 +1,39 @@
 ﻿@using EnergyInsightHub.Data
+@using EnergyInsightHub.Models
+@using Microsoft.EntityFrameworkCore
 
 @page "/"
 @rendermode InteractiveServer
 
+@inject IDbContextFactory<EnergyHubContext> EnergyHubContextFactory
+
 <PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
+<h1>Energy Insight Hub</h1>
 
-Welcome to your new app.
+<button @onclick="Generate">Click</button>
+
+@code{
+    protected async void Generate()
+    {
+        Reading dummyReading = new() { Time = new DateTime(), EnergyMeterId = 0, MicrocontrollerId = 0, Amount = 30 };
+        var _context = await EnergyHubContextFactory.CreateDbContextAsync();
+        if (_context != null)
+        {
+            try
+            {
+                _context.Readings.Add(dummyReading);
+                _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.StackTrace);
+                throw; // Rethrow the exception to ensure it's not swallowed
+            }
+        }
+    }
+    protected override async void OnInitialized(){
+        
+    }
+}
