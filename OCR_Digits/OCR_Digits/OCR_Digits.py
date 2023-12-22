@@ -3,6 +3,7 @@ import pytesseract
 import cv2
 import os
 import sqlite3
+import re
 from sqlite3 import Error
 
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR/tesseract.exe'
@@ -12,7 +13,8 @@ current_directory = os.getcwd()
 relative_path = os.path.join('..', '..')
 absolute_path = os.path.abspath(os.path.join(current_directory, relative_path))
 database = absolute_path + r'\EnergyInsightHub\Data\EnergyHub.db'
-meterPhotos = absolute_path + r'\ArtificialMeters'
+meterImagePath = absolute_path + r'\ArtificialMeters'
+meterImages = os.listdir(meterImagePath)
 
 ###CREATE CONNECTION WITH DATEABASE FILE
 def create_connection(db_file):
@@ -38,18 +40,32 @@ def insert_reading(conn, reading):
  
 ### CURRENT READ METER ALGORITHM
 def read_meter(meterPhoto):
-    image = cv2.imread("artificialMeter27.png")
+    image = cv2.imread(meterPhoto)
     crop_image = image[415:485, 385:665]
     rgb = cv2.cvtColor(crop_image, cv2.COLOR_BGR2RGB)
     options = "" #"outputbase digits"
     # OCR the input image using Tesseract
-    return pytesseract.image_to_string(rgb, config=options)
+    return float(pytesseract.image_to_string(rgb, config=options))
 
 conn = create_connection(database)
 
 with conn:
-    newReading = (0,0,"2023-12-22 15:54:41", 30.0)
-    insert_reading(conn, newReading)
+    for meter in meterImages:
+        properties = meter.split('_')
+        meterId = properties[0]
+        controllerId = properties[1]
+        
+        datetime = properties[2].split(' ')
+        date = datetime[0]
+        time = datetime[1].split('.')[0]
+        time = f"{time[:2]}:{time[2:4]}:{time[4:]}"
+        
+        datetime = f"{date} {time}"
+
+        reading = read_meter(f"{meterImagePath}\\{meter}")
+        
+        newReading = (meterId,controllerId,datetime, reading)
+        insert_reading(conn, newReading)
 
 
 
