@@ -396,3 +396,6 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+/.vs/EnergyInsightHub/FileContentIndex/19d0f562-33af-4cc4-b441-e6c67c6445bb.vsidx
+/.vs/EnergyInsightHub/v17/.futdcache.v2
+/obj/Debug/net8.0/EnergyInsightHub.AssemblyInfo.cs
