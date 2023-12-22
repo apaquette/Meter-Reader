@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("EnergyInsightHub")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d45d4529b2ba197ef64ac141608acebdb24b4bdf")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
 [assembly: System.Reflection.AssemblyProductAttribute("EnergyInsightHub")]
 [assembly: System.Reflection.AssemblyTitleAttribute("EnergyInsightHub")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
