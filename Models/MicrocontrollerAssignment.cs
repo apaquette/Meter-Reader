@@ -13,4 +13,13 @@ public class MicrocontrollerAssignment
 
     public DateTime StartTime { get; set; }
     public DateTime? EndTime { get; set; }
+
+    public MicrocontrollerAssignment() { }
+
+    public MicrocontrollerAssignment(Microcontroller microcontroller, Meter meter, DateTime startTime)
+    {
+        Controller = microcontroller;
+        EnergyMeter = meter;
+        StartTime = startTime;
+    }
 }

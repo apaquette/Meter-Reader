@@ -9,4 +9,6 @@ public class Reading
     public Microcontroller Microcontroller { get; set; } //Microcontroller that generated the reading
     public DateTime Time { get; set; } //time the reading was captured
     public decimal Amount { get; set; } //amount the reading represents
+
+    public Reading() { }
 }

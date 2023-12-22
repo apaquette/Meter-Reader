@@ -1,10 +1,13 @@
 using EnergyInsightHub.Components;
+using EnergyInsightHub.Data;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("EnergyHubDB");
 
 // Add services to the container.
-builder.Services.AddRazorComponents()
+builder.Services.AddDbContextFactory<EnergyHubContext>(options => options.UseSqlite(connectionString))
+    .AddRazorComponents()
     .AddInteractiveServerComponents();
 
 var app = builder.Build();
