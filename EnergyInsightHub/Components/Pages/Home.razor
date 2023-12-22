@@ -11,29 +11,25 @@
 
 <h1>Energy Insight Hub</h1>
 
-<button @onclick="Generate">Click</button>
+
 
 @code{
-    protected async void Generate()
+    List<Reading> Readings = new();
+
+    protected override async void OnInitialized()
     {
-        Reading dummyReading = new() { Time = DateTime.Now, EnergyMeterId = 0, MicrocontrollerId = 0, Amount = 30 };
         var _context = await EnergyHubContextFactory.CreateDbContextAsync();
         if (_context != null)
         {
             try
             {
-                _context.Readings.Add(dummyReading);
-                _context.SaveChanges();
+                Readings = _context.Readings.ToList();
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
                 Console.WriteLine(ex.StackTrace);
-                throw; // Rethrow the exception to ensure it's not swallowed
             }
         }
-    }
-    protected override async void OnInitialized(){
-        
     }
 }
