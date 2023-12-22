@@ -12,17 +12,55 @@
 <h1>Energy Insight Hub</h1>
 
 
+
+<RadzenDataGrid Data="@Rows" TItem="Row" AllowPaging PagerHorizontalAlign="HorizontalAlign.Center" Density="Density.Compact" GridLines="DataGridGridLines.Horizontal" EmptyText="No Readings to show.">
+     <HeaderTemplate>
+         <RadzenButton Text="Load Data" Click="LoadReads" />
+     </HeaderTemplate>
+    <Columns>
+        <RadzenDataGridColumn TItem="Row" Property="Date" Title="Date" Width="120px">
+            <Template Context="data">
+                @data.Date.ToString("yyyy-MM-dd")
+            </Template>
+        </RadzenDataGridColumn>
+        @for (int x = 1; x < 25; ++x)
+        {
+            DateTime time = new();
+            int index = x - 1;
+            <RadzenDataGridColumn TItem="Row" Title="@((time.AddHours(x) - time).ToString(@"hh\:mm"))">
+                <Template Context="data">
+                    @data.Readings[index].Amount
+                </Template>
+            </RadzenDataGridColumn>
+        }
+        <RadzenDataGridColumn TItem="Row" Title="Total" Property="Total" Width="80px" />
+    </Columns>
+</RadzenDataGrid>
+
+
 @code{
     List<Reading> Readings = new();
+    List<Row> Rows = new();
 
-    protected override async void OnInitialized()
+    protected async void LoadReads()
     {
+        Rows = new();
         var _context = await EnergyHubContextFactory.CreateDbContextAsync();
         if (_context != null)
         {
             try
             {
-                Readings = _context.Readings.ToList();
+                var days = _context.Readings.ToList().GroupBy(item => item.Time.Date);
+                foreach (var day in days)
+                {
+                    Rows.Add(
+                        new()
+                            {
+                                Date = day.Key,
+                                Readings = day.ToList()
+                            }
+                    );
+                }
             }
             catch (Exception ex)
             {
@@ -30,5 +68,18 @@
                 Console.WriteLine(ex.StackTrace);
             }
         }
+        StateHasChanged();
+    }
+
+    protected override async void OnInitialized()
+    {
+        
+    }
+
+    private class Row{
+        public DateTime Date { get; set; }
+        public string DisplayDate => Date.ToString("YYYY-MM-dd");
+        public List<Reading> Readings { get; set; } = new();
+        public decimal Total => Readings.Last().Amount - Readings.First().Amount;
     }
 }
