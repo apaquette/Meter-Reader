@@ -1,32 +1,13 @@
-﻿namespace MeterReader.Models;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace EnergyInsightHub.Models;
 
 public class Meter
 {
-    private Microcontroller microcontroller;
-    public Meter(Microcontroller controller, string serialNumber, string address)
-    {
-        microcontroller = controller;
-        SerialNumber = serialNumber;
-        Address = address;
-    }
-
-    public string SerialNumber { get; }
-
-    public string Address { get; set; }
-
-
-
-
-    //TODO: Implement GetReadings
-    public List<Reading> GetReadings()
-    {
-        return new();
-    }
-
-    //TODO: Implement Assignment method
-    public MicrocontrollerAssignment AssignMicrocontroller(Microcontroller controller)
-    {
-        microcontroller = controller;
-        return new();
-    }
+    [Key]
+    public int Id { get; set; }
+    public string SerialNumber { get; set; }
+    public Microcontroller? Controller { get; set; }
+    public string Address { get; set; }    
 }

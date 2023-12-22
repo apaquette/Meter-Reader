@@ -1,13 +1,12 @@
-﻿namespace MeterReader.Models;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace EnergyInsightHub.Models;
 public class Reading
 {
-    public Reading(Meter energyMeter, DateTime time, decimal amount)
-    {
-        EnergyMeter = energyMeter;
-        Time = time;
-        Amount = amount;
-    }
-    public Meter EnergyMeter { get; private set; }
-    public DateTime Time { get; private set; }
-    public decimal Amount { get; private set; }
+    [Key]
+    public int Id { get; set; }
+    public Meter EnergyMeter { get; set; } //Energy Meter the reading came from
+    public Microcontroller Microcontroller { get; set; } //Microcontroller that generated the reading
+    public DateTime Time { get; set; } //time the reading was captured
+    public decimal Amount { get; set; } //amount the reading represents
 }

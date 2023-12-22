@@ -1,6 +1,7 @@
-using Meter_Reader.Components;
+using EnergyInsightHub.Components;
 
 var builder = WebApplication.CreateBuilder(args);
+var connectionString = builder.Configuration.GetConnectionString("EnergyHubDB");
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
