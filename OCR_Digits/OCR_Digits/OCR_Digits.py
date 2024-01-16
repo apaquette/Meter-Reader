@@ -13,14 +13,7 @@ from sqlite3 import Error
 
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR/tesseract.exe'
 
-### GET DATABASE FILE
-current_directory = os.getcwd()
-relative_path = os.path.join('..', '..')
-absolute_path = os.path.abspath(os.path.join(current_directory, relative_path))
-database = absolute_path + r'\EnergyInsightHub\Data\EnergyHub.db'
-meterImagePath = absolute_path + r'\ArtificialMeters'
-meterImages = os.listdir(meterImagePath)
-
+### CREATE READ WHEN PHOTO IS ADDED TO FOLDER
 class PhotoHandler(FileSystemEventHandler):
     def on_created(self, event):
         if event.is_directory:
@@ -44,7 +37,7 @@ class PhotoHandler(FileSystemEventHandler):
             newReading = (meterId,controllerId,datetime, reading)
             insert_reading(newReading)
 
-###CREATE CONNECTION WITH DATEABASE FILE
+### CREATE CONNECTION WITH DATEABASE FILE
 def create_connection(db_file):
     """ create a database connection to the SQLite database
         specified by db_file
@@ -59,6 +52,7 @@ def create_connection(db_file):
 
     return conn
 
+## INSERT READING INTO DATABASE
 def insert_reading(reading):
     conn = create_connection(database)
     with conn:
@@ -67,8 +61,8 @@ def insert_reading(reading):
         cur = conn.cursor()
         cur.execute(sql, reading)
         conn.commit()
- 
-### CURRENT READ METER ALGORITHM
+
+### READ METER ALGORITHM
 def read_meter(meterPhoto):
     image = cv2.imread(meterPhoto)
     crop_image = image[415:485, 385:665]
@@ -76,6 +70,14 @@ def read_meter(meterPhoto):
     options = "" #"outputbase digits"
     # OCR the input image using Tesseract
     return float(pytesseract.image_to_string(rgb, config=options))
+
+### GET DATABASE FILE
+current_directory = os.getcwd()
+relative_path = os.path.join('..', '..')
+absolute_path = os.path.abspath(os.path.join(current_directory, relative_path))
+database = absolute_path + r'\EnergyInsightHub\Data\EnergyHub.db'
+meterImagePath = absolute_path + r'\ArtificialMeters'
+meterImages = os.listdir(meterImagePath)
 
 photo_handler = PhotoHandler()
 
@@ -91,24 +93,6 @@ except KeyboardInterrupt:
     observer.stop()
     
 observer.join()
-
-# with conn:
-#     for meter in meterImages:
-#         properties = meter.split('_')
-#         meterId = properties[0]
-#         controllerId = properties[1]
-        
-#         datetime = properties[2].split(' ')
-#         date = datetime[0]
-#         time = datetime[1].split('.')[0]
-#         time = f"{time[:2]}:{time[2:4]}:{time[4:]}"
-        
-#         datetime = f"{date} {time}"
-
-#         reading = read_meter(f"{meterImagePath}\\{meter}")
-        
-#         newReading = (meterId,controllerId,datetime, reading)
-#         insert_reading(conn, newReading)
 
 
 
