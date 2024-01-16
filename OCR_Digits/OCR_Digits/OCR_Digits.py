@@ -4,6 +4,11 @@ import cv2
 import os
 import sqlite3
 import re
+
+import time
+
+from watchdog.observers import Observer
+from watchdog.events import FileSystemEventHandler
 from sqlite3 import Error
 
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR/tesseract.exe'
@@ -15,6 +20,29 @@ absolute_path = os.path.abspath(os.path.join(current_directory, relative_path))
 database = absolute_path + r'\EnergyInsightHub\Data\EnergyHub.db'
 meterImagePath = absolute_path + r'\ArtificialMeters'
 meterImages = os.listdir(meterImagePath)
+
+class PhotoHandler(FileSystemEventHandler):
+    def on_created(self, event):
+        if event.is_directory:
+            return
+        elif event.event_type == 'created' and event.src_path.lower().endswith('png'):
+            print(f'read {event.src_path}')
+            meter = event.src_path.split('\\')[-1]
+            properties = meter.split('_')
+            meterId = properties[0]
+            controllerId = properties[1]
+        
+            datetime = properties[2].split(' ')
+            date = datetime[0]
+            time = datetime[1].split('.')[0]
+            time = f"{time[:2]}:{time[2:4]}:{time[4:]}"
+        
+            datetime = f"{date} {time}"
+
+            reading = read_meter(event.src_path)
+        
+            newReading = (meterId,controllerId,datetime, reading)
+            insert_reading(newReading)
 
 ###CREATE CONNECTION WITH DATEABASE FILE
 def create_connection(db_file):
@@ -31,12 +59,14 @@ def create_connection(db_file):
 
     return conn
 
-def insert_reading(conn, reading):
-    sql = ''' INSERT INTO Readings(EnergyMeterId,MicrocontrollerId,Time,Amount)
-              VALUES(?,?,?,?) '''
-    cur = conn.cursor()
-    cur.execute(sql, reading)
-    conn.commit()
+def insert_reading(reading):
+    conn = create_connection(database)
+    with conn:
+        sql = ''' INSERT INTO Readings(EnergyMeterId,MicrocontrollerId,Time,Amount)
+                  VALUES(?,?,?,?) '''
+        cur = conn.cursor()
+        cur.execute(sql, reading)
+        conn.commit()
  
 ### CURRENT READ METER ALGORITHM
 def read_meter(meterPhoto):
@@ -47,25 +77,38 @@ def read_meter(meterPhoto):
     # OCR the input image using Tesseract
     return float(pytesseract.image_to_string(rgb, config=options))
 
-conn = create_connection(database)
+photo_handler = PhotoHandler()
 
-with conn:
-    for meter in meterImages:
-        properties = meter.split('_')
-        meterId = properties[0]
-        controllerId = properties[1]
-        
-        datetime = properties[2].split(' ')
-        date = datetime[0]
-        time = datetime[1].split('.')[0]
-        time = f"{time[:2]}:{time[2:4]}:{time[4:]}"
-        
-        datetime = f"{date} {time}"
+print('service running...')
+observer = Observer()
+observer.schedule(photo_handler, path = meterImagePath)
+observer.start()
 
-        reading = read_meter(f"{meterImagePath}\\{meter}")
+try:
+    while True:
+        time.sleep(1)
+except KeyboardInterrupt:
+    observer.stop()
+    
+observer.join()
+
+# with conn:
+#     for meter in meterImages:
+#         properties = meter.split('_')
+#         meterId = properties[0]
+#         controllerId = properties[1]
         
-        newReading = (meterId,controllerId,datetime, reading)
-        insert_reading(conn, newReading)
+#         datetime = properties[2].split(' ')
+#         date = datetime[0]
+#         time = datetime[1].split('.')[0]
+#         time = f"{time[:2]}:{time[2:4]}:{time[4:]}"
+        
+#         datetime = f"{date} {time}"
+
+#         reading = read_meter(f"{meterImagePath}\\{meter}")
+        
+#         newReading = (meterId,controllerId,datetime, reading)
+#         insert_reading(conn, newReading)
 
 
 
