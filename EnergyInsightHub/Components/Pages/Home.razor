@@ -15,7 +15,13 @@
 
 <RadzenDataGrid Data="@Rows" TItem="Row" AllowPaging PagerHorizontalAlign="HorizontalAlign.Center" Density="Density.Compact" GridLines="DataGridGridLines.Horizontal" EmptyText="No Readings to show.">
      <HeaderTemplate>
-         <RadzenButton Text="Load Data" Click="LoadReads" />
+         <RadzenRow JustifyContent="JustifyContent.Center" AlignItems="AlignItems.Center">
+             <RadzenLabel>Start: </RadzenLabel>
+             <RadzenDatePicker @bind-Value=@StartDate />
+             <RadzenLabel>End: </RadzenLabel>
+             <RadzenDatePicker @bind-Value=@EndDate />
+            <RadzenButton Text="Load Data" Click="LoadReads" />
+         </RadzenRow>
      </HeaderTemplate>
     <Columns>
         <RadzenDataGridColumn TItem="Row" Property="Date" Title="Date" Width="120px">
@@ -41,6 +47,8 @@
 @code{
     List<Reading> Readings = new();
     List<Row> Rows = new();
+    DateTime? StartDate = new();
+    DateTime? EndDate = new();
 
     protected async void LoadReads()
     {
