@@ -71,30 +71,33 @@ def read_meter(meterPhoto):
     # OCR the input image using Tesseract
     return float(pytesseract.image_to_string(rgb, config=options))
 
-### GET DATABASE FILE
-current_directory = os.getcwd()
-relative_path = os.path.join('..', '..')
-absolute_path = os.path.abspath(os.path.join(current_directory, relative_path))
-database = absolute_path + r'\EnergyInsightHub\Data\EnergyHub.db'
-meterImagePath = absolute_path + r'\ArtificialMeters'
-meterImages = os.listdir(meterImagePath)
 
-photo_handler = PhotoHandler()
+def main():
+    ### GET DATABASE FILE
+    current_directory = os.getcwd()
+    relative_path = os.path.join('..', '..')
+    absolute_path = os.path.abspath(os.path.join(current_directory, relative_path))
+    database = absolute_path + r'\EnergyInsightHub\Data\EnergyHub.db'
+    meterImagePath = absolute_path + r'\ArtificialMeters'
+    meterImages = os.listdir(meterImagePath)
 
-print('service running...')
-observer = Observer()
-observer.schedule(photo_handler, path = meterImagePath)
-observer.start()
+    photo_handler = PhotoHandler()
 
-try:
-    while True:
-        time.sleep(1)
-except KeyboardInterrupt:
-    observer.stop()
-    
-observer.join()
+    print('service running...')
+    observer = Observer()
+    observer.schedule(photo_handler, path = meterImagePath)
+    observer.start()
 
+    try:
+        while True:
+            time.sleep(1)
+    except KeyboardInterrupt:
+        observer.stop()
+        
+    observer.join()
 
+if __name__ == "__main__":
+    main()
 
 
 ###OLD SOLUTION
