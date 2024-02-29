@@ -11,15 +11,13 @@
 
 <h1>Energy Insight Hub</h1>
 
-
-
 <RadzenDataGrid Data="@Rows" TItem="Row" AllowPaging PagerHorizontalAlign="HorizontalAlign.Center" Density="Density.Compact" GridLines="DataGridGridLines.Horizontal" EmptyText="No Readings to show.">
      <HeaderTemplate>
          <RadzenRow JustifyContent="JustifyContent.Center" AlignItems="AlignItems.Center">
-             <RadzenLabel>Start: </RadzenLabel>
+             @* <RadzenLabel>Start: </RadzenLabel>
              <RadzenDatePicker @bind-Value=@StartDate />
              <RadzenLabel>End: </RadzenLabel>
-             <RadzenDatePicker @bind-Value=@EndDate />
+             <RadzenDatePicker @bind-Value=@EndDate /> *@
             <RadzenButton Text="Load Data" Click="LoadReads" />
          </RadzenRow>
      </HeaderTemplate>
@@ -45,7 +43,7 @@
 
 
 @code{
-    List<Reading> Readings = new();
+    //List<Reading> Readings = new();
     List<Row> Rows = new();
     DateTime? StartDate = new();
     DateTime? EndDate = new();
@@ -53,6 +51,7 @@
     protected async void LoadReads()
     {
         Rows = new();
+        //Readings = new();
         var _context = await EnergyHubContextFactory.CreateDbContextAsync();
         if (_context != null)
         {
@@ -65,7 +64,7 @@
                         new()
                             {
                                 Date = day.Key,
-                                Readings = day.ToList()
+                                Readings = day.OrderBy(r => r.Time).ToList()
                             }
                     );
                 }
@@ -79,9 +78,9 @@
         StateHasChanged();
     }
 
-    protected override async void OnInitialized()
+    protected override void OnInitialized()
     {
-        
+        LoadReads();
     }
 
     private class Row{
