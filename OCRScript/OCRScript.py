@@ -77,8 +77,14 @@ def main():
     current_directory = os.getcwd()
     relative_path = os.path.join('..')
     absolute_path = os.path.abspath(os.path.join(current_directory, relative_path))
-    database = absolute_path + r'\EnergyInsightHub\Data\EnergyHub.db'
-    meterImagePath = absolute_path + r'\ArtificialMeters'
+    
+    database = os.path.join(absolute_path, 'EnergyInsightHub', 'Data', 'EnergyHub.db')
+    #database = absolute_path + r'\EnergyInsightHub\Data\EnergyHub.db'
+
+    meterImagePath = os.path.join(absolute_path, 'ArtificialMeters')
+    #meterImagePath = absolute_path + r'\ArtificialMeters'
+    
+    print(meterImagePath)
     meterImages = os.listdir(meterImagePath)
 
     photo_handler = PhotoHandler()
