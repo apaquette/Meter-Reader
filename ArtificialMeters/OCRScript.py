@@ -79,9 +79,12 @@ def main():
     current_directory = os.getcwd()
     relative_path = os.path.join('..')
     absolute_path = os.path.abspath(os.path.join(current_directory, relative_path))
+
+    testFolder = "EnergyInsightHub"
+    releaseFolder = "EnergyInsightHubRelease"
     
     global database
-    database = os.path.join(absolute_path, 'EnergyInsightHub', 'Data', 'EnergyHub.db')
+    database = os.path.join(absolute_path, releaseFolder, 'Data', 'EnergyHub.db')
     
     meterImagePath = current_directory #os.path.join(absolute_path, 'ArtificialMeters')
 
