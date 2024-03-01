@@ -12,7 +12,6 @@ from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler #event handler to listen for when an image is added to the folder
 from sqlite3 import Error
 
-meterImages = ""
 database = ""
 
 ### CREATE READ WHEN PHOTO IS ADDED TO FOLDER
@@ -66,30 +65,25 @@ def insert_reading(reading):
 ### READ METER ALGORITHM
 def read_meter(meterPhoto):
     image = imageio.imread(meterPhoto)
-    #cv2.imshow("image",image)
-    #crop_image = image[415:485, 385:665] #old values
-    crop_image = image[935:1066, 1122:1590]
+    crop_image = image[935:1066, 1122:1590]#image[415:485, 385:665] #old values
     rgb = cv2.cvtColor(crop_image, cv2.COLOR_BGR2RGB)
     cv2.imwrite(meterPhoto, rgb)
     ##OCR the input image using ssocr
     output = subprocess.Popen(['ssocr', '-T', meterPhoto.split('/')[-1]], stdout=subprocess.PIPE)
     value = output.communicate()[0].decode("utf-8")
     return float(value)
-    
-    # OCR the input image using Tesseract
-    #return float(pytesseract.image_to_string(rgb, config=""))
 
-
+### MAIN METHOD
 def main():
     ### GET DATABASE FILE
     current_directory = os.getcwd()
     relative_path = os.path.join('..')
     absolute_path = os.path.abspath(os.path.join(current_directory, relative_path))
     
+    global database
     database = os.path.join(absolute_path, 'EnergyInsightHub', 'Data', 'EnergyHub.db')
+    
     meterImagePath = current_directory #os.path.join(absolute_path, 'ArtificialMeters')
-
-    #meterImages = os.listdir(meterImagePath)
 
     photo_handler = PhotoHandler()
 
@@ -105,6 +99,8 @@ def main():
         observer.stop()
         
     observer.join()
+
+
 
 if __name__ == "__main__":
     main()
