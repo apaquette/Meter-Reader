@@ -1,0 +1,120 @@
+﻿@using EnergyInsightHub.Data
+@using EnergyInsightHub.Models
+@using Microsoft.EntityFrameworkCore
+
+@page "/"
+@rendermode InteractiveServer
+
+@inject IDbContextFactory<EnergyHubContext> EnergyHubContextFactory
+
+<PageTitle>Home</PageTitle>
+
+<h1>Energy Insight Hub</h1>
+
+<RadzenDataGrid Data="@Rows" TItem="Row" AllowPaging PagerHorizontalAlign="HorizontalAlign.Center" Density="Density.Compact" GridLines="DataGridGridLines.Horizontal" EmptyText="No Readings to show.">
+     <HeaderTemplate>
+         <RadzenRow JustifyContent="JustifyContent.Center" AlignItems="AlignItems.Center">
+             @* <RadzenLabel>Start: </RadzenLabel>
+             <RadzenDatePicker @bind-Value=@StartDate />
+             <RadzenLabel>End: </RadzenLabel>
+             <RadzenDatePicker @bind-Value=@EndDate /> *@
+            <RadzenButton Text="Load Data" Click="LoadReads" />
+         </RadzenRow>
+     </HeaderTemplate>
+    <Columns>
+        <RadzenDataGridColumn TItem="Row" Property="Date" Title="Date" Width="120px">
+            <Template Context="data">
+                @data.Date.ToString("yyyy-MM-dd")
+            </Template>
+        </RadzenDataGridColumn>
+        @for (int x = 1; x < 25; ++x)
+        {
+            DateTime time = new();
+            int index = x - 1;
+            <RadzenDataGridColumn TItem="Row" Title="@((time.AddHours(x) - time).ToString(@"hh\:mm"))">
+                <Template Context="data">
+                    @if(data.Readings[index] is null)
+                    {
+                        @("-")
+                    }
+                    @data.Readings[index]?.Amount
+                </Template>
+            </RadzenDataGridColumn>
+        }
+        <RadzenDataGridColumn TItem="Row" Title="Total" Property="Total" Width="80px" />
+    </Columns>
+</RadzenDataGrid>
+
+
+@code{
+    List<Row> Rows = new();
+    DateTime? StartDate = new();
+    DateTime? EndDate = new();
+
+    protected async void LoadReads()
+    {
+        Rows = new();
+        //Readings = new();
+        var _context = await EnergyHubContextFactory.CreateDbContextAsync();
+        if (_context != null)
+        {
+            try
+            {
+                var days = _context.Readings.ToList().GroupBy(item => item.Time.Date);
+                foreach (var day in days)
+                {
+                    var date = day.Key;
+                    List<Reading?> readings = day.OrderBy(r => r.Time).ToList();
+
+                    //handle missing readings
+                    if(readings.Count < 24)
+                    {
+                        readings = PadReadings(readings);
+                    }
+
+                    Rows.Add(
+                        new()
+                            {
+                                Date = date,
+                                Readings = readings
+                            }
+                    );
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.StackTrace);
+            }
+        }
+        StateHasChanged();
+    }
+
+    private List<Reading?> PadReadings(List<Reading?> readings)
+    {
+        DateTime currentHour = new DateTime(2024, 3, 1, 0, 0, 0);
+        List<Reading?> result = new();
+        //early exit is there are no readings at all
+        if (readings.Count == 0) return Enumerable.Repeat((Reading?)null, 24).ToList();
+        
+        for (int hour = 1; hour <= 24; ++hour)
+        {
+            currentHour = currentHour.AddHours(1);
+            var existingReading = readings.FirstOrDefault(r => r?.Time.Hour == currentHour.Hour);
+            result.Add(existingReading);
+        }
+        return result;
+    }
+
+    protected override void OnInitialized()
+    {
+        //LoadReads();
+    }
+
+    private class Row{
+        public DateTime Date { get; set; }
+        public string DisplayDate => Date.ToString("YYYY-MM-dd");
+        public List<Reading?> Readings { get; set; } = new();
+        public decimal? Total => Readings?.Last(r => r != null).Amount - Readings?.First(r => r != null).Amount;
+    }
+}
