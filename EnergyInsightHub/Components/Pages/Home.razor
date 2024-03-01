@@ -64,21 +64,12 @@
                 foreach (var day in days)
                 {
                     var date = day.Key;
-                    var readings = day.OrderBy(r => r.Time).ToList();
+                    List<Reading?> readings = day.OrderBy(r => r.Time).ToList();
 
                     //handle missing readings
                     if(readings.Count < 24)
                     {
-                        DateTime currentHour = new DateTime(2024, 3, 1, 0, 0, 0);
-                        List<Reading?> result = new();
-                        for(int hour = 1; hour <= 24; ++hour)
-                        {
-                            currentHour = currentHour.AddHours(1);
-                            var existingReading = readings.FirstOrDefault(r => r.Time.Hour == currentHour.Hour);
-                            result.Add(existingReading);
-                        }
-                        readings.Clear();
-                        readings.AddRange(result);
+                        readings = PadReadings(readings);
                     }
 
                     Rows.Add(
@@ -97,6 +88,22 @@
             }
         }
         StateHasChanged();
+    }
+
+    private List<Reading?> PadReadings(List<Reading?> readings)
+    {
+        DateTime currentHour = new DateTime(2024, 3, 1, 0, 0, 0);
+        List<Reading?> result = new();
+        //early exit is there are no readings at all
+        if (readings.Count == 0) return Enumerable.Repeat((Reading?)null, 24).ToList();
+        
+        for (int hour = 1; hour <= 24; ++hour)
+        {
+            currentHour = currentHour.AddHours(1);
+            var existingReading = readings.FirstOrDefault(r => r?.Time.Hour == currentHour.Hour);
+            result.Add(existingReading);
+        }
+        return result;
     }
 
     protected override void OnInitialized()
