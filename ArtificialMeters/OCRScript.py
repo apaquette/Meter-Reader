@@ -1,5 +1,4 @@
 # import the necessary packages
-import pytesseract #OCR read text from images
 import cv2 #image manpiulation
 import os #file access
 import sqlite3 #execute sql
@@ -12,8 +11,6 @@ import time
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler #event handler to listen for when an image is added to the folder
 from sqlite3 import Error
-
-pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR/tesseract.exe'
 
 meterImages = ""
 database = ""
