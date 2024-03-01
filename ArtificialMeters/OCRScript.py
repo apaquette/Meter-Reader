@@ -16,13 +16,14 @@ from sqlite3 import Error
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR/tesseract.exe'
 
 meterImages = ""
+database = ""
 
 ### CREATE READ WHEN PHOTO IS ADDED TO FOLDER
 class PhotoHandler(FileSystemEventHandler):
     def on_created(self, event):
         if event.is_directory:
             return
-        elif event.event_type == 'created' and event.src_path.lower().endswith('png'):
+        elif event.event_type == 'created' and event.src_path.lower().endswith('jpg'):
             print(f'read {event.src_path}')
             meter = event.src_path.split('/')[-1]# / for linux, \\ for windows
             properties = meter.split('_')
@@ -69,11 +70,14 @@ def insert_reading(reading):
 def read_meter(meterPhoto):
     image = imageio.imread(meterPhoto)
     #cv2.imshow("image",image)
-    crop_image = image[415:485, 385:665]
+    #crop_image = image[415:485, 385:665] #old values
+    crop_image = image[935:1066, 1122:1590]
     rgb = cv2.cvtColor(crop_image, cv2.COLOR_BGR2RGB)
     cv2.imwrite(meterPhoto, rgb)
     ##OCR the input image using ssocr
-    return float(subprocess.run(f"ssocr -T {meterPhoto.split('/')[-1]}", stdout=subprocess.PIPE))
+    output = subprocess.Popen(['ssocr', '-T', meterPhoto.split('/')[-1]], stdout=subprocess.PIPE)
+    value = output.communicate()[0].decode("utf-8")
+    return float(value)
     
     # OCR the input image using Tesseract
     #return float(pytesseract.image_to_string(rgb, config=""))
