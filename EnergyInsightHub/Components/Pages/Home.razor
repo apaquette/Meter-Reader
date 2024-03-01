@@ -33,7 +33,11 @@
             int index = x - 1;
             <RadzenDataGridColumn TItem="Row" Title="@((time.AddHours(x) - time).ToString(@"hh\:mm"))">
                 <Template Context="data">
-                    @data.Readings[index].Amount
+                    @if(data.Readings[index] is null)
+                    {
+                        @("-")
+                    }
+                    @data.Readings[index]?.Amount
                 </Template>
             </RadzenDataGridColumn>
         }
@@ -43,7 +47,6 @@
 
 
 @code{
-    //List<Reading> Readings = new();
     List<Row> Rows = new();
     DateTime? StartDate = new();
     DateTime? EndDate = new();
@@ -60,11 +63,29 @@
                 var days = _context.Readings.ToList().GroupBy(item => item.Time.Date);
                 foreach (var day in days)
                 {
+                    var date = day.Key;
+                    var readings = day.OrderBy(r => r.Time).ToList();
+
+                    //handle missing readings
+                    if(readings.Count < 24)
+                    {
+                        DateTime currentHour = new DateTime(2024, 3, 1, 0, 0, 0);
+                        List<Reading?> result = new();
+                        for(int hour = 1; hour <= 24; ++hour)
+                        {
+                            currentHour = currentHour.AddHours(1);
+                            var existingReading = readings.FirstOrDefault(r => r.Time.Hour == currentHour.Hour);
+                            result.Add(existingReading);
+                        }
+                        readings.Clear();
+                        readings.AddRange(result);
+                    }
+
                     Rows.Add(
                         new()
                             {
-                                Date = day.Key,
-                                Readings = day.OrderBy(r => r.Time).ToList()
+                                Date = date,
+                                Readings = readings
                             }
                     );
                 }
@@ -86,7 +107,7 @@
     private class Row{
         public DateTime Date { get; set; }
         public string DisplayDate => Date.ToString("YYYY-MM-dd");
-        public List<Reading> Readings { get; set; } = new();
-        public decimal Total => Readings.Last().Amount - Readings.First().Amount;
+        public List<Reading?> Readings { get; set; } = new();
+        public decimal? Total => Readings?.Last(r => r != null).Amount - Readings?.First(r => r != null).Amount;
     }
 }
