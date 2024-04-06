@@ -1,2 +1,2 @@
-#define SECRET_SSID "(Guests) - I.T. Carlow"
-#define SECRET_PASS "setucw24"
+#define SECRET_SSID "YOUR NETWORK"
+#define SECRET_PASS "YOUR PASSWORD"
