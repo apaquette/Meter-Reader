@@ -13,6 +13,8 @@ from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler #event handler to listen for when an image is added to the folder
 from sqlite3 import Error
 
+pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR/tesseract.exe'
+
 database = ""
 
 ### CREATE READ WHEN PHOTO IS ADDED TO FOLDER
@@ -20,7 +22,7 @@ class PhotoHandler(FileSystemEventHandler):
     def on_created(self, event):
         if event.is_directory:
             return
-        elif event.event_type == 'created' and event.src_path.lower().endswith('jpg'):
+        elif event.event_type == 'created' and event.src_path.lower().endswith('png'):
             print(f'read {event.src_path}')
             meter = event.src_path.split('/')[-1]# / for linux, \\ for windows
             properties = meter.split('_')
@@ -33,9 +35,9 @@ class PhotoHandler(FileSystemEventHandler):
             time = f"{time[:2]}:{time[2:4]}:{time[4:]}"
         
             datetime = f"{date} {time}"
-            reading = read_meter_ssocr(event.src_path)
-            #reading = read_meter_old(event.src_path)
-        
+            #reading = read_meter_ssocr(event.src_path)
+            reading = read_meter_old(event.src_path)
+
             newReading = (meterId,controllerId,datetime, reading)
             insert_reading(newReading)
 
@@ -91,10 +93,10 @@ def main():
     absolute_path = os.path.abspath(os.path.join(current_directory, relative_path))
 
     testFolder = "EnergyInsightHub"
-    releaseFolder = "EnergyInsightHubRelease"
+    releaseFolder = "Release"
     
     global database
-    database = os.path.join(absolute_path, releaseFolder, 'Data', 'EnergyHub.db')
+    database = os.path.join(absolute_path, testFolder, 'Data', 'EnergyHub.db')
     
     meterImagePath = current_directory #os.path.join(absolute_path, 'ArtificialMeters')
 

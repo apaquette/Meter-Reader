@@ -7,20 +7,44 @@
 
 @inject IDbContextFactory<EnergyHubContext> EnergyHubContextFactory
 
-<PageTitle>Home</PageTitle>
+<PageTitle>Dashboard</PageTitle>
 
-<h1>Energy Insight Hub</h1>
+<RadzenHeader>Energy Insight Hub</RadzenHeader>
+<br />
+<br />
+<br />
+<br />
+
+<RadzenChart >
+    <RadzenColumnSeries Data=@Columns CategoryProperty="Date" Title="Reading" ValueProperty="Amount" >
+        <TooltipTemplate>
+            @context.Date
+            <br />
+            @context.Amount kwh
+        </TooltipTemplate>
+    </RadzenColumnSeries>
+
+    <RadzenLegend Visible=false />
+    <RadzenColumnOptions Radius="5" Width="20" />
+    <RadzenValueAxis>
+        <RadzenGridLines Visible="true" />
+        <RadzenAxisTitle Text="Total consumption (kwh)" />
+    </RadzenValueAxis>
+    <RadzenCategoryAxis Visible=false />
+</RadzenChart>
+
+<br />
 
 <RadzenDataGrid Data="@Rows" TItem="Row" AllowPaging PagerHorizontalAlign="HorizontalAlign.Center" Density="Density.Compact" GridLines="DataGridGridLines.Horizontal" EmptyText="No Readings to show.">
-     <HeaderTemplate>
+     @* <HeaderTemplate>
          <RadzenRow JustifyContent="JustifyContent.Center" AlignItems="AlignItems.Center">
              @* <RadzenLabel>Start: </RadzenLabel>
              <RadzenDatePicker @bind-Value=@StartDate />
              <RadzenLabel>End: </RadzenLabel>
-             <RadzenDatePicker @bind-Value=@EndDate /> *@
+             <RadzenDatePicker @bind-Value=@EndDate /> 
             <RadzenButton Text="Load Data" Click="LoadReads" />
          </RadzenRow>
-     </HeaderTemplate>
+     </HeaderTemplate> *@
     <Columns>
         <RadzenDataGridColumn TItem="Row" Property="Date" Title="Date" Width="120px">
             <Template Context="data">
@@ -48,13 +72,19 @@
 
 @code{
     List<Row> Rows = new();
+    List<Column> Columns = new();
     DateTime? StartDate = new();
     DateTime? EndDate = new();
+
+    protected override void OnInitialized()
+    {
+        LoadReads();
+    }
 
     protected async void LoadReads()
     {
         Rows = new();
-        //Readings = new();
+        Columns = new();
         var _context = await EnergyHubContextFactory.CreateDbContextAsync();
         if (_context != null)
         {
@@ -65,6 +95,15 @@
                 {
                     var date = day.Key;
                     List<Reading?> readings = day.OrderBy(r => r.Time).ToList();
+
+                    List<Column> columns = readings.Select
+                    (
+                        r => new Column
+                            {
+                                Amount = r.Amount,
+                                Date = r.Time
+                            }
+                    ).ToList();
 
                     //handle missing readings
                     if(readings.Count < 24)
@@ -79,6 +118,7 @@
                                 Readings = readings
                             }
                     );
+                    Columns.AddRange(columns);
                 }
             }
             catch (Exception ex)
@@ -87,16 +127,32 @@
                 Console.WriteLine(ex.StackTrace);
             }
         }
+
+        // var readings = _context?.Readings.ToList() ?? new();
+
+        // if(readings.Count > 0)
+        // {
+        //     DateTime start = readings.FirstOrDefault().Time.Date;
+        //     DateTime end = readings.LastOrDefault().Time.Date;
+
+        //     if (start == end) end = start.AddDays(1);
+
+        //     for(; start != end; start = start.AddHours(1))
+        //     {
+                
+        //     }
+        // }
+
         StateHasChanged();
     }
 
     private List<Reading?> PadReadings(List<Reading?> readings)
     {
-        DateTime currentHour = new DateTime(2024, 3, 1, 0, 0, 0);
-        List<Reading?> result = new();
         //early exit is there are no readings at all
         if (readings.Count == 0) return Enumerable.Repeat((Reading?)null, 24).ToList();
-        
+
+        DateTime currentHour = new DateTime(2024, 1, 1, 0, 0, 0);
+        List<Reading?> result = new();
         for (int hour = 1; hour <= 24; ++hour)
         {
             currentHour = currentHour.AddHours(1);
@@ -106,15 +162,17 @@
         return result;
     }
 
-    protected override void OnInitialized()
+    private class Row
     {
-        //LoadReads();
-    }
-
-    private class Row{
         public DateTime Date { get; set; }
         public string DisplayDate => Date.ToString("YYYY-MM-dd");
         public List<Reading?> Readings { get; set; } = new();
         public decimal? Total => Readings?.Last(r => r != null).Amount - Readings?.First(r => r != null).Amount;
+    }
+
+    private class Column
+    {
+        public decimal Amount { get; set; }
+        public DateTime Date { get; set; }
     }
 }
