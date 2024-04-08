@@ -5,6 +5,7 @@ import sqlite3 #execute sql
 import re
 import subprocess #execute linux commands
 import imageio.v2 as imageio #trying this to open images, cv2 stopped working in linux :-(
+import pytesseract
 
 import time
 
@@ -32,7 +33,8 @@ class PhotoHandler(FileSystemEventHandler):
             time = f"{time[:2]}:{time[2:4]}:{time[4:]}"
         
             datetime = f"{date} {time}"
-            reading = read_meter(event.src_path)
+            reading = read_meter_ssocr(event.src_path)
+            #reading = read_meter_old(event.src_path)
         
             newReading = (meterId,controllerId,datetime, reading)
             insert_reading(newReading)
@@ -63,7 +65,7 @@ def insert_reading(reading):
         conn.commit()
 
 ### READ METER ALGORITHM
-def read_meter(meterPhoto):
+def read_meter_ssocr(meterPhoto):
     image = imageio.imread(meterPhoto)
     crop_image = image[935:1066, 1122:1590]#image[415:485, 385:665] #old values
     rgb = cv2.cvtColor(crop_image, cv2.COLOR_BGR2RGB)
@@ -72,6 +74,14 @@ def read_meter(meterPhoto):
     output = subprocess.Popen(['ssocr', '-T', meterPhoto.split('/')[-1]], stdout=subprocess.PIPE)
     value = output.communicate()[0].decode("utf-8")
     return float(value)
+
+### OLD READ METER ALGORITHM (USING NON SEVEN-SEGMENT IMAGES)
+def read_meter_old(meterPhoto):
+    image = cv2.imread(meterPhoto)
+    crop_image = image[415:485, 385:665]
+    rgb = cv2.cvtColor(crop_image, cv2.COLOR_BGR2RGB)
+    # OCR the input image using Tesseract
+    return float(pytesseract.image_to_string(rgb, config=""))
 
 ### MAIN METHOD
 def main():
