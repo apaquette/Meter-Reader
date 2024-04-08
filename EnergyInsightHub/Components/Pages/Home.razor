@@ -15,12 +15,35 @@
 <br />
 <br />
 
-<RadzenChart >
-    <RadzenColumnSeries Data=@Columns CategoryProperty="Date" Title="Reading" ValueProperty="Amount" >
+<RadzenChart>
+    <RadzenLineSeries Data=@Intervals CategoryProperty="Time" Title="Hourly Consumption" ValueProperty="Amount" >
+        <ChildContent>
+            <RadzenMarkers MarkerType="MarkerType.Circle" />
+        </ChildContent>
         <TooltipTemplate>
-            @context.Date
+            <b>Date:</b> @context.Time.ToString("dd/MM/yyyy")
             <br />
-            @context.Amount kwh
+            <b>Time:</b> @context.Time.ToString("HH:mm")
+            <br />
+            <b>Interval:</b> @context.Amount kwh
+        </TooltipTemplate>
+    </RadzenLineSeries>
+    <RadzenValueAxis>
+        <RadzenGridLines Visible="true" />
+        <RadzenAxisTitle Text="Hourly consumption (kwh)" />
+
+    </RadzenValueAxis>
+    <RadzenCategoryAxis Visible=false />
+</RadzenChart>
+
+<RadzenChart >
+    <RadzenColumnSeries Data=@ChartColumns CategoryProperty="Date" Title="Reading" ValueProperty="Amount" >
+        <TooltipTemplate>
+            <b>Date:</b> @context.Date.ToString("dd/MM/yyyy")
+            <br />
+            <b>Time:</b> @context.Date.ToString("HH:mm")
+            <br />
+            <b>Reading:</b> @context.Amount kwh
         </TooltipTemplate>
     </RadzenColumnSeries>
 
@@ -35,7 +58,7 @@
 
 <br />
 
-<RadzenDataGrid Data="@Rows" TItem="Row" AllowPaging PagerHorizontalAlign="HorizontalAlign.Center" Density="Density.Compact" GridLines="DataGridGridLines.Horizontal" EmptyText="No Readings to show.">
+<RadzenDataGrid Data="@GridRows" TItem="Row" AllowPaging PagerHorizontalAlign="HorizontalAlign.Center" Density="Density.Compact" GridLines="DataGridGridLines.Horizontal" EmptyText="No Readings to show.">
      @* <HeaderTemplate>
          <RadzenRow JustifyContent="JustifyContent.Center" AlignItems="AlignItems.Center">
              @* <RadzenLabel>Start: </RadzenLabel>
@@ -69,10 +92,16 @@
     </Columns>
 </RadzenDataGrid>
 
+<br />
+<br />
+<br />
+<br />
+
 
 @code{
-    List<Row> Rows = new();
-    List<Column> Columns = new();
+    List<Row> GridRows = new();
+    List<Column> ChartColumns = new();
+    List<Interval> Intervals = new();
     DateTime? StartDate = new();
     DateTime? EndDate = new();
 
@@ -83,8 +112,9 @@
 
     protected async void LoadReads()
     {
-        Rows = new();
-        Columns = new();
+        GridRows = new();
+        ChartColumns = new();
+        Intervals = new();
         var _context = await EnergyHubContextFactory.CreateDbContextAsync();
         if (_context != null)
         {
@@ -96,14 +126,21 @@
                     var date = day.Key;
                     List<Reading?> readings = day.OrderBy(r => r.Time).ToList();
 
-                    List<Column> columns = readings.Select
-                    (
-                        r => new Column
+                    List<Column> columns = readings.Select(r => new Column
                             {
                                 Amount = r.Amount,
                                 Date = r.Time
-                            }
-                    ).ToList();
+                            }).ToList();
+                    for (int i = 1; i < columns.Count; ++i)
+                    {
+                        TimeSpan timeDifference = columns[i].Date - columns[i - 1].Date;
+
+                        if (timeDifference == TimeSpan.FromHours(1))
+                        {
+                            decimal intervalAmount = columns[i].Amount - columns[i - 1].Amount;
+                            Intervals.Add(new Interval { Amount = intervalAmount, Time = columns[i].Date });
+                        }
+                    }
 
                     //handle missing readings
                     if(readings.Count < 24)
@@ -111,14 +148,14 @@
                         readings = PadReadings(readings);
                     }
 
-                    Rows.Add(
+                    GridRows.Add(
                         new()
                             {
                                 Date = date,
                                 Readings = readings
                             }
                     );
-                    Columns.AddRange(columns);
+                    ChartColumns.AddRange(columns);
                 }
             }
             catch (Exception ex)
@@ -127,21 +164,6 @@
                 Console.WriteLine(ex.StackTrace);
             }
         }
-
-        // var readings = _context?.Readings.ToList() ?? new();
-
-        // if(readings.Count > 0)
-        // {
-        //     DateTime start = readings.FirstOrDefault().Time.Date;
-        //     DateTime end = readings.LastOrDefault().Time.Date;
-
-        //     if (start == end) end = start.AddDays(1);
-
-        //     for(; start != end; start = start.AddHours(1))
-        //     {
-                
-        //     }
-        // }
 
         StateHasChanged();
     }
@@ -174,5 +196,11 @@
     {
         public decimal Amount { get; set; }
         public DateTime Date { get; set; }
+    }
+
+    private class Interval
+    {
+        public decimal Amount { get; set; }
+        public DateTime Time { get; set; }
     }
 }
