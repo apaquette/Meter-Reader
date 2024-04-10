@@ -16,6 +16,7 @@ from sqlite3 import Error
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR/tesseract.exe'
 
 database = ""
+updateFile = ""
 
 ### CREATE READ WHEN PHOTO IS ADDED TO FOLDER
 class PhotoHandler(FileSystemEventHandler):
@@ -23,23 +24,25 @@ class PhotoHandler(FileSystemEventHandler):
         if event.is_directory:
             return
         elif event.event_type == 'created' and event.src_path.lower().endswith('png'):
-            print(f'read {event.src_path}')
-            meter = event.src_path.split('/')[-1]# / for linux, \\ for windows
-            properties = meter.split('_')
-            meterId = properties[0]
-            controllerId = properties[1]
-        
-            datetime = properties[2].split(' ')
-            date = datetime[0]
-            time = datetime[1].split('.')[0]
-            time = f"{time[:2]}:{time[2:4]}:{time[4:]}"
-        
-            datetime = f"{date} {time}"
-            #reading = read_meter_ssocr(event.src_path)
-            reading = read_meter_old(event.src_path)
-
-            newReading = (meterId,controllerId,datetime, reading)
-            insert_reading(newReading)
+            try:
+                meter = event.src_path.split('/')[-1]# / for linux, \\ for windows
+                properties = meter.split('_')
+                meterId = properties[0]
+                controllerId = properties[1]
+            
+                datetime = properties[2].split(' ')
+                date = datetime[0]
+                time = datetime[1].split('.')[0]
+                time = f"{time[:2]}:{time[2:4]}:{time[4:]}"
+            
+                datetime = f"{date} {time}"
+                #reading = read_meter_ssocr(event.src_path)
+                reading = read_meter_old(event.src_path)
+                newReading = (meterId,controllerId,datetime, reading)
+                insert_reading(newReading)
+                print("Inserted new Reading")
+            except:
+                print(f'failed to read')
 
 ### CREATE CONNECTION WITH DATEABASE FILE
 def create_connection(db_file):
@@ -65,6 +68,12 @@ def insert_reading(reading):
         cur = conn.cursor()
         cur.execute(sql, reading)
         conn.commit()
+    conn.close()
+
+
+    f = open(updateFile, "w")
+    f.write("Updated")
+    f.close()
 
 ### READ METER ALGORITHM
 def read_meter_ssocr(meterPhoto):
@@ -98,6 +107,9 @@ def main():
     global database
     database = os.path.join(absolute_path, testFolder, 'Data', 'EnergyHub.db')
     
+    global updateFile
+    updateFile = os.path.join(absolute_path, testFolder, 'Data', 'update.txt')
+
     meterImagePath = current_directory #os.path.join(absolute_path, 'ArtificialMeters')
 
     photo_handler = PhotoHandler()

@@ -1,11 +1,15 @@
 ﻿@using EnergyInsightHub.Data
 @using EnergyInsightHub.Models
+@using EnergyInsightHub.Services
 @using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.SignalR.Client
 
 @page "/"
 @rendermode InteractiveServer
 
 @inject IDbContextFactory<EnergyHubContext> EnergyHubContextFactory
+@inject NavigationManager Navigation
+@inject DashboardUpdater DashboardUpdater
 
 <PageTitle>Dashboard</PageTitle>
 
@@ -31,10 +35,10 @@
                     <b>Interval:</b> @context.Amount kwh
                 </TooltipTemplate>
             </RadzenLineSeries>
+            <RadzenLegend Visible=false />
             <RadzenValueAxis>
                 <RadzenGridLines Visible="true" />
                 <RadzenAxisTitle Text="Hourly consumption (kwh)" />
-
             </RadzenValueAxis>
             <RadzenCategoryAxis Visible=false />
         </RadzenChart>
@@ -63,9 +67,6 @@
     </RadzenColumn>
 </RadzenRow>
 
-
-
-
 <br />
 
 <RadzenText Text="Raw Data" TextStyle="TextStyle.DisplayH5" />
@@ -85,10 +86,10 @@
                 @data.Date.ToString("yyyy-MM-dd")
             </Template>
         </RadzenDataGridColumn>
-        @for (int x = 1; x < 25; ++x)
+        @for (int x = 0; x < 24; ++x)
         {
             DateTime time = new();
-            int index = x - 1;
+            int index = x;
             <RadzenDataGridColumn TItem="Row" Title="@((time.AddHours(x) - time).ToString(@"hh\:mm"))">
                 <Template Context="data">
                     @if(data.Readings[index] is null)
@@ -113,12 +114,23 @@
     List<Row> GridRows = new();
     List<Column> ChartColumns = new();
     List<Interval> Intervals = new();
-    DateTime? StartDate = new();
-    DateTime? EndDate = new();
+    private HubConnection? hubConnection;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        LoadReads();
+        LoadReads(); // first load
+
+        hubConnection = new HubConnectionBuilder()
+          .WithUrl(Navigation.ToAbsoluteUri("/dashboardhub"))
+          .Build();
+
+        hubConnection.On("UpdateDashboard", () =>
+        {
+            LoadReads();
+            InvokeAsync(StateHasChanged);
+        });
+
+        await hubConnection.StartAsync();
     }
 
     protected async void LoadReads()
@@ -132,6 +144,7 @@
             try
             {
                 var days = _context.Readings.ToList().GroupBy(item => item.Time.Date);
+                _context.Dispose();
                 foreach (var day in days)
                 {
                     var date = day.Key;
@@ -176,7 +189,7 @@
             }
         }
 
-        StateHasChanged();
+        //StateHasChanged();
     }
 
     private List<Reading?> PadReadings(List<Reading?> readings)
@@ -184,12 +197,10 @@
         //early exit is there are no readings at all
         if (readings.Count == 0) return Enumerable.Repeat((Reading?)null, 24).ToList();
 
-        DateTime currentHour = new DateTime(2024, 1, 1, 0, 0, 0);
         List<Reading?> result = new();
-        for (int hour = 1; hour <= 24; ++hour)
+        for (int hour = 0; hour <= 23; ++hour)
         {
-            currentHour = currentHour.AddHours(1);
-            var existingReading = readings.FirstOrDefault(r => r?.Time.Hour == currentHour.Hour);
+            var existingReading = readings.FirstOrDefault(r => r?.Time.Hour == hour);
             result.Add(existingReading);
         }
         return result;

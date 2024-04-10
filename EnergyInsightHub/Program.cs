@@ -1,6 +1,9 @@
 using EnergyInsightHub.Components;
 using EnergyInsightHub.Data;
 using Microsoft.EntityFrameworkCore;
+using EnergyInsightHub.Hubs;
+using EnergyInsightHub.Services;
+using Microsoft.AspNetCore.ResponseCompression;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("EnergyHubDB");
@@ -9,6 +12,16 @@ var connectionString = builder.Configuration.GetConnectionString("EnergyHubDB");
 builder.Services.AddDbContextFactory<EnergyHubContext>(options => options.UseSqlite(connectionString))
     .AddRazorComponents()
     .AddInteractiveServerComponents();
+
+builder.Services.AddSignalR();
+
+builder.Services.AddResponseCompression(opts =>
+{
+    opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
+          new[] { "application/octet-stream" });
+});
+
+builder.Services.AddSingleton<DashboardUpdater>();
 
 var app = builder.Build();
 
@@ -27,5 +40,11 @@ app.UseAntiforgery();
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
+
+app.UseResponseCompression();
+
+// SignalR
+app.MapHub<DashboardHub>("/dashboardhub");
+//app.MapFallbackToPage("/_Host");
 
 app.Run();
