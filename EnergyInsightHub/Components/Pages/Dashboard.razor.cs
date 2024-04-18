@@ -11,6 +11,8 @@ public partial class Dashboard : ComponentBase {
     private List<Column> ChartColumns { get; set; } = new();
     private List<Interval> Intervals { get; set; } = new();
 
+    private TimeSpan StepValue { get; set; } = TimeSpan.FromHours(1);
+
     [Inject]
     private IDbContextFactory<EnergyHubContext>? EnergyHubContextFactory { get; set; }
     [Inject]
@@ -39,6 +41,8 @@ public partial class Dashboard : ComponentBase {
         GridRows = new();
         ChartColumns = new();
         Intervals = new();
+        StepValue = TimeSpan.FromHours(1);
+
         var _context = await EnergyHubContextFactory.CreateDbContextAsync();
         if (_context != null) {
             try {
@@ -73,6 +77,12 @@ public partial class Dashboard : ComponentBase {
                         }
                     );
                     ChartColumns.AddRange(columns);
+
+                    if(ChartColumns.Count > 0) {
+                        int count = ChartColumns.Count / 10;
+                        if (count < 1) count = 1;
+                        StepValue = TimeSpan.FromHours(count);
+                    }
                 }
             }
             catch (Exception ex) {

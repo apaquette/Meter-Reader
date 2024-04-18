@@ -38,11 +38,11 @@
                 </TooltipTemplate>
             </RadzenLineSeries>
             <RadzenLegend Visible=false />
-            <RadzenValueAxis>
+            <RadzenValueAxis Step="1">
                 <RadzenGridLines Visible="true" />
                 <RadzenAxisTitle Text="Hourly consumption (kwh)" />
             </RadzenValueAxis>
-            <RadzenCategoryAxis Formatter=@(value => (((DateTime)value).ToString("HH:mm"))) Step="TimeSpan.FromHours(2)" />
+            <RadzenCategoryAxis Formatter=@(value => (((DateTime)value).ToString("HH:mm"))) Step="StepValue" />
         </RadzenChart>
     </RadzenColumn>
     <RadzenColumn>
@@ -64,7 +64,7 @@
                 <RadzenGridLines Visible="true" />
                 <RadzenAxisTitle Text="Total consumption (kwh)" />
             </RadzenValueAxis>
-            <RadzenCategoryAxis Formatter=@(value => (((DateTime)value).ToString("HH:mm"))) Step="TimeSpan.FromHours(1)" />
+            <RadzenCategoryAxis Formatter=@(value => (((DateTime)value).ToString("HH:mm"))) Step="StepValue" />
         </RadzenChart>
     </RadzenColumn>
 </RadzenRow>
