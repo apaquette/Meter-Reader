@@ -111,8 +111,7 @@
     List<Interval> Intervals = new();
     private HubConnection? hubConnection;
 
-    protected override async Task OnInitializedAsync()
-    {
+    protected override async Task OnInitializedAsync(){
         LoadReads(); // first load
 
         hubConnection = new HubConnectionBuilder()
@@ -128,8 +127,7 @@
         await hubConnection.StartAsync();
     }
 
-    protected async void LoadReads()
-    {
+    protected async void LoadReads(){
         GridRows = new();
         ChartColumns = new();
         Intervals = new();
@@ -206,9 +204,8 @@
         var _context = await EnergyHubContextFactory.CreateDbContextAsync();
 
         if (_context != null) {
-            _context.Readings.RemoveRange(_context.Readings); // empty database
-            await _context.SaveChangesAsync();
-            await InvokeAsync(StateHasChanged);
+            _context.ResetDB();
+            LoadReads();
         }
     }
 

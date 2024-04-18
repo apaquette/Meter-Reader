@@ -33,7 +33,7 @@ public class MeterReaderService {
         _meterReader = Process.Start(startInfo);
         File.WriteAllTextAsync(Path.Combine("pid.txt"), _meterReader.Id.ToString());
     }
-
+    
     public void StopMeterReader() {
         if (_processId.HasValue) {
             int pid = (int)_processId;
@@ -41,6 +41,7 @@ public class MeterReaderService {
         }
     }
 
+    //solution from here: https://stackoverflow.com/questions/30249873/process-kill-doesnt-seem-to-kill-the-process
     private void EndService(int pid) {
         ManagementObjectSearcher processSearcher = new ($"Select * From Win32_Process Where ParentProcessID={pid}");
         ManagementObjectCollection processCollection = processSearcher.Get();
