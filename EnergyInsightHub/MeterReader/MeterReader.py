@@ -1,6 +1,7 @@
 # import the necessary packages
 import cv2 #image manpiulation
 import os #file access
+import platform
 import sqlite3 #execute sql
 import re
 import subprocess #execute linux commands
@@ -17,6 +18,7 @@ pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR/tessera
 
 database = ""
 updateFile = ""
+fileSeperator = ""
 
 ### CREATE READ WHEN PHOTO IS ADDED TO FOLDER
 class PhotoHandler(FileSystemEventHandler):
@@ -25,7 +27,8 @@ class PhotoHandler(FileSystemEventHandler):
             return
         elif event.event_type == 'created' and event.src_path.lower().endswith('png'):
             try:
-                meter = event.src_path.split('/')[-1]# / for linux, \\ for windows
+                global fileSeperator
+                meter = event.src_path.split(fileSeperator)[-1]# / for linux, \\ for windows
                 properties = meter.split('_')
                 meterId = properties[0]
                 controllerId = properties[1]
@@ -97,23 +100,32 @@ def read_meter_old(meterPhoto):
 
 ### MAIN METHOD
 def main():
+    global fileSeperator
+
+    match platform.system():
+        case 'Windows': fileSeperator = '\\'
+        case 'Linux': fileSeperator = '/'
+
     ### GET DATABASE FILE
     current_directory = os.getcwd()
     relative_path = os.path.join('..')
     absolute_path = os.path.abspath(os.path.join(current_directory, relative_path))
 
-    testFolder = "EnergyInsightHub"
-    releaseFolder = "Release"
+    dbFolder = "Data"
     
     global database
-    database = os.path.join(absolute_path, testFolder, 'Data', 'EnergyHub.db')
+    database = os.path.join(absolute_path, dbFolder, 'EnergyHub.db')
     
     global updateFile
-    updateFile = os.path.join(absolute_path, testFolder, 'Data', 'update.txt')
+    updateFile = os.path.join(absolute_path, dbFolder, 'update.txt')
 
     meterImagePath = current_directory #os.path.join(absolute_path, 'ArtificialMeters')
 
     photo_handler = PhotoHandler()
+
+    print(f'Database: {database}')
+    print(f'Update File: {updateFile}')
+    print(f'Image Path: {meterImagePath}')
 
     print('service running...')
     observer = Observer()

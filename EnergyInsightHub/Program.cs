@@ -22,8 +22,15 @@ builder.Services.AddResponseCompression(opts =>
 });
 
 builder.Services.AddSingleton<DashboardUpdater>();
+builder.Services.AddSingleton<MeterReaderService>();
 
 var app = builder.Build();
+
+// start reader with application
+var meterReaderService = app.Services.GetRequiredService<MeterReaderService>();
+
+// stop reader with application
+app.Lifetime.ApplicationStopping.Register(meterReaderService.StopMeterReader);
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
