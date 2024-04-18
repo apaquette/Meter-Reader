@@ -23,7 +23,7 @@
     <RadzenColumn>
         <RadzenText Text="Hourly Consumption" TextStyle="TextStyle.DisplayH5" />
         <RadzenChart>
-            <RadzenLineSeries Data=@Intervals CategoryProperty="Time" Title="Hourly Consumption" ValueProperty="Amount">
+            <RadzenLineSeries Data=@Intervals CategoryProperty="CategoryDisplay" Title="Hourly Consumption" ValueProperty="Amount">
                 <ChildContent>
                     <RadzenMarkers MarkerType="MarkerType.Circle" />
                 </ChildContent>
@@ -40,13 +40,12 @@
                 <RadzenGridLines Visible="true" />
                 <RadzenAxisTitle Text="Hourly consumption (kwh)" />
             </RadzenValueAxis>
-            <RadzenCategoryAxis Visible=false />
         </RadzenChart>
     </RadzenColumn>
     <RadzenColumn>
         <RadzenText Text="Total Consumption" TextStyle="TextStyle.DisplayH5" />
         <RadzenChart>
-            <RadzenColumnSeries Data=@ChartColumns CategoryProperty="Date" Title="Reading" ValueProperty="Amount">
+            <RadzenColumnSeries Data=@ChartColumns CategoryProperty="CategoryDisplay" Title="Reading" ValueProperty="Amount">
                 <TooltipTemplate>
                     <b>Date:</b> @context.Date.ToString("dd/MM/yyyy")
                     <br />
@@ -62,7 +61,6 @@
                 <RadzenGridLines Visible="true" />
                 <RadzenAxisTitle Text="Total consumption (kwh)" />
             </RadzenValueAxis>
-            <RadzenCategoryAxis Visible=false />
         </RadzenChart>
     </RadzenColumn>
 </RadzenRow>
@@ -218,11 +216,13 @@
     {
         public decimal Amount { get; set; }
         public DateTime Date { get; set; }
+        public string CategoryDisplay => Date.TimeOfDay == TimeSpan.Zero ? $"{Date.ToString("dd-MMM")}" : Date.ToString("HH:mm");
     }
 
     private class Interval
     {
         public decimal Amount { get; set; }
         public DateTime Time { get; set; }
+        public string CategoryDisplay => Time.TimeOfDay == TimeSpan.Zero ? $"{Time.ToString("dd-MMM")}" : Time.ToString("HH:mm");
     }
 }

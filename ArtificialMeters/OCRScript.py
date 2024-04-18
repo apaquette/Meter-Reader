@@ -41,8 +41,9 @@ class PhotoHandler(FileSystemEventHandler):
                 newReading = (meterId,controllerId,datetime, reading)
                 insert_reading(newReading)
                 print("Inserted new Reading")
-            except:
+            except Error as e:
                 print(f'failed to read')
+                print(e)
 
 ### CREATE CONNECTION WITH DATEABASE FILE
 def create_connection(db_file):
