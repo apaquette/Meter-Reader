@@ -10,6 +10,17 @@
   <ItemGroup>
     <None Remove="Data\EnergyHub.db" />
     <None Remove="Data\update.txt" />
+    <None Remove="TestMeterImages\0_0_2023-12-22 130000.png" />
+    <None Remove="TestMeterImages\0_0_2023-12-22 140000.png" />
+    <None Remove="TestMeterImages\0_0_2023-12-22 150000.png" />
+    <None Remove="TestMeterImages\0_0_2023-12-22 160000.png" />
+    <None Remove="TestMeterImages\0_0_2023-12-22 170000.png" />
+    <None Remove="TestMeterImages\0_0_2023-12-22 180000.png" />
+    <None Remove="TestMeterImages\0_0_2023-12-22 190000.png" />
+    <None Remove="TestMeterImages\0_0_2023-12-22 200000.png" />
+    <None Remove="TestMeterImages\0_0_2023-12-22 210000.png" />
+    <None Remove="TestMeterImages\0_0_2023-12-22 220000.png" />
+    <None Remove="TestMeterImages\0_0_2023-12-22 230000.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -17,6 +28,39 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Data\update.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestMeterImages\0_0_2023-12-22 130000.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestMeterImages\0_0_2023-12-22 140000.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestMeterImages\0_0_2023-12-22 150000.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestMeterImages\0_0_2023-12-22 160000.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestMeterImages\0_0_2023-12-22 170000.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestMeterImages\0_0_2023-12-22 180000.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestMeterImages\0_0_2023-12-22 190000.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestMeterImages\0_0_2023-12-22 200000.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestMeterImages\0_0_2023-12-22 210000.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestMeterImages\0_0_2023-12-22 220000.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestMeterImages\0_0_2023-12-22 230000.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

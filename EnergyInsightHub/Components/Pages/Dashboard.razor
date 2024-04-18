@@ -1,15 +1,11 @@
-﻿@using EnergyInsightHub.Data
-@using EnergyInsightHub.Models
+﻿@* @using EnergyInsightHub.Data
+@using EnergyInsightHub.Models*@
 @using EnergyInsightHub.Services
-@* @using Microsoft.EntityFrameworkCore
-@using Microsoft.AspNetCore.SignalR.Client *@
 
 @page "/"
 @rendermode InteractiveServer
 
-@* @inject IDbContextFactory<EnergyHubContext> EnergyHubContextFactory
-@inject NavigationManager Navigation
-@inject DashboardUpdater DashboardUpdater *@
+@inject DashboardUpdater DashboardUpdater
 
 <PageTitle>Dashboard</PageTitle>
 

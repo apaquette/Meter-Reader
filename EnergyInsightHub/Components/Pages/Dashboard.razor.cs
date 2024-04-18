@@ -15,8 +15,6 @@ public partial class Dashboard : ComponentBase {
     private IDbContextFactory<EnergyHubContext>? EnergyHubContextFactory { get; set; }
     [Inject]
     private NavigationManager? Navigation { get; set; }
-    [Inject]
-    private DashboardUpdater? DashboardUpdater { get; set; }
 
     [Inject]
     private TransmissionService? TransmissionService { get; set; }
@@ -104,8 +102,17 @@ public partial class Dashboard : ComponentBase {
 
         if (_context != null) {
             _context.ResetDB();
-            LoadReads();
         }
+
+        string sourceDir = "MeterReader";
+        string destinationDir = "TestMeterImages";
+        List<string> imageFiles = Directory.GetFiles(sourceDir, "*.png").ToList();
+        foreach (string image in imageFiles) {
+            string newImageDir = Path.Combine(destinationDir, Path.GetFileName(image));
+            File.Move(image, newImageDir);
+        }
+
+        LoadReads();
     }
 
     private class Row {
