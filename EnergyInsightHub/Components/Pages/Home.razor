@@ -13,13 +13,15 @@
 
 <PageTitle>Dashboard</PageTitle>
 
-<RadzenHeader>Energy Insight Hub</RadzenHeader>
-<br />
-<br />
-<br />
-<br />
+<RadzenHeader>
+    <RadzenText Text="Energy Insight Hub" TextStyle="TextStyle.DisplayH1" Style="color: white;" />
+</RadzenHeader>
 
-<RadzenRow>
+<RadzenRow Style="margin-top: 150px;">
+    <RadzenButton Text="Reset" Click="ResetDatabase" />
+    <RadzenButton Text="Start Transmission" />
+</RadzenRow>
+<RadzenRow Style="margin-top: 50px;">
     <RadzenColumn>
         <RadzenText Text="Hourly Consumption" TextStyle="TextStyle.DisplayH5" />
         <RadzenChart>
@@ -75,7 +77,7 @@
              <RadzenDatePicker @bind-Value=@StartDate />
              <RadzenLabel>End: </RadzenLabel>
              <RadzenDatePicker @bind-Value=@EndDate /> 
-            <RadzenButton Text="Load Data" Click="LoadReads" />
+            
          </RadzenRow>
      </HeaderTemplate> *@
     <Columns>
@@ -101,11 +103,6 @@
         <RadzenDataGridColumn TItem="Row" Title="Total" Property="Total" Width="80px" />
     </Columns>
 </RadzenDataGrid>
-
-<br />
-<br />
-<br />
-<br />
 
 
 @code{
@@ -202,6 +199,17 @@
             result.Add(existingReading);
         }
         return result;
+    }
+
+    // this works, but state has changed doesn't
+    private async void ResetDatabase() {
+        var _context = await EnergyHubContextFactory.CreateDbContextAsync();
+
+        if (_context != null) {
+            _context.Readings.RemoveRange(_context.Readings); // empty database
+            await _context.SaveChangesAsync();
+            await InvokeAsync(StateHasChanged);
+        }
     }
 
     private class Row
