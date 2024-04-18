@@ -31,4 +31,10 @@
     <PackageReference Include="Radzen.Blazor" Version="4.23.4" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="MeterReader\MeterReader.py">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
