@@ -1,0 +1,98 @@
+﻿@using EnergyInsightHub.Data
+@using EnergyInsightHub.Models
+@using EnergyInsightHub.Services
+@* @using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.SignalR.Client *@
+
+@page "/"
+@rendermode InteractiveServer
+
+@* @inject IDbContextFactory<EnergyHubContext> EnergyHubContextFactory
+@inject NavigationManager Navigation
+@inject DashboardUpdater DashboardUpdater *@
+
+<PageTitle>Dashboard</PageTitle>
+
+<RadzenHeader>
+    <RadzenText Text="Energy Insight Hub" TextStyle="TextStyle.DisplayH1" Style="color: white;" />
+</RadzenHeader>
+
+<RadzenRow Style="margin-top: 150px;">
+    <RadzenButton Text="Reset" Click="ResetDatabase" />
+    <RadzenButton Text="Start Transmission" Click="TransmissionService.TransmitImages" />
+</RadzenRow>
+
+<RadzenText Text="Hourly Consumption" TextStyle="TextStyle.DisplayH5" />
+<RadzenChart>
+    <RadzenLineSeries Data=@Intervals CategoryProperty="CategoryDisplay" Title="Hourly Consumption" ValueProperty="Amount">
+        <ChildContent>
+            <RadzenMarkers MarkerType="MarkerType.Circle" />
+        </ChildContent>
+        <TooltipTemplate>
+            <b>Date:</b> @context.Time.ToString("dd/MM/yyyy")
+            <br />
+            <b>Time:</b> @context.Time.ToString("HH:mm")
+            <br />
+            <b>Interval:</b> @context.Amount kwh
+        </TooltipTemplate>
+    </RadzenLineSeries>
+    <RadzenLegend Visible=false />
+    <RadzenValueAxis>
+        <RadzenGridLines Visible="true" />
+        <RadzenAxisTitle Text="Hourly consumption (kwh)" />
+    </RadzenValueAxis>
+</RadzenChart>
+<RadzenText Text="Total Consumption" TextStyle="TextStyle.DisplayH5" />
+<RadzenChart>
+    <RadzenColumnSeries Data=@ChartColumns CategoryProperty="CategoryDisplay" Title="Reading" ValueProperty="Amount">
+        <TooltipTemplate>
+            <b>Date:</b> @context.Date.ToString("dd/MM/yyyy")
+            <br />
+            <b>Time:</b> @context.Date.ToString("HH:mm")
+            <br />
+            <b>Reading:</b> @context.Amount kwh
+        </TooltipTemplate>
+    </RadzenColumnSeries>
+
+    <RadzenLegend Visible=false />
+    <RadzenColumnOptions Radius="5" Width="20" />
+    <RadzenValueAxis>
+        <RadzenGridLines Visible="true" />
+        <RadzenAxisTitle Text="Total consumption (kwh)" />
+    </RadzenValueAxis>
+</RadzenChart>
+
+<RadzenText Text="Raw Data" TextStyle="TextStyle.DisplayH5" />
+<RadzenDataGrid Data="@GridRows" TItem="Row" AllowPaging PagerHorizontalAlign="HorizontalAlign.Center" Density="Density.Compact" GridLines="DataGridGridLines.Horizontal" EmptyText="No Readings to show.">
+     @* <HeaderTemplate>
+         <RadzenRow JustifyContent="JustifyContent.Center" AlignItems="AlignItems.Center">
+             @* <RadzenLabel>Start: </RadzenLabel>
+             <RadzenDatePicker @bind-Value=@StartDate />
+             <RadzenLabel>End: </RadzenLabel>
+             <RadzenDatePicker @bind-Value=@EndDate /> 
+            
+         </RadzenRow>
+     </HeaderTemplate> *@
+    <Columns>
+        <RadzenDataGridColumn TItem="Row" Property="Date" Title="Date" Width="120px">
+            <Template Context="data">
+                @data.Date.ToString("yyyy-MM-dd")
+            </Template>
+        </RadzenDataGridColumn>
+        @for (int x = 0; x < 24; ++x)
+        {
+            DateTime time = new();
+            int index = x;
+            <RadzenDataGridColumn TItem="Row" Title="@((time.AddHours(x) - time).ToString(@"hh\:mm"))">
+                <Template Context="data">
+                    @if(data.Readings[index] is null)
+                    {
+                        @("-")
+                    }
+                    @data.Readings[index]?.Amount
+                </Template>
+            </RadzenDataGridColumn>
+        }
+        <RadzenDataGridColumn TItem="Row" Title="Total" Property="Total" Width="80px" />
+    </Columns>
+</RadzenDataGrid>

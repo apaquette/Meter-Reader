@@ -24,6 +24,8 @@ builder.Services.AddResponseCompression(opts =>
 builder.Services.AddSingleton<DashboardUpdater>();
 builder.Services.AddSingleton<MeterReaderService>();
 
+builder.Services.AddSingleton<TransmissionService>();
+
 var app = builder.Build();
 
 // start reader with application
