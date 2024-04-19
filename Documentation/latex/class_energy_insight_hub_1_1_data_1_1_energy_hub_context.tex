@@ -1,0 +1,68 @@
+\doxysection{Energy\+Insight\+Hub.\+Data.\+Energy\+Hub\+Context Class Reference}
+\hypertarget{class_energy_insight_hub_1_1_data_1_1_energy_hub_context}{}\label{class_energy_insight_hub_1_1_data_1_1_energy_hub_context}\index{EnergyInsightHub.Data.EnergyHubContext@{EnergyInsightHub.Data.EnergyHubContext}}
+
+
+Represents the database context for the \doxylink{namespace_energy_insight_hub}{Energy\+Insight\+Hub} application.  
+
+
+Inheritance diagram for Energy\+Insight\+Hub.\+Data.\+Energy\+Hub\+Context\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_energy_insight_hub_1_1_data_1_1_energy_hub_context}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_energy_insight_hub_1_1_data_1_1_energy_hub_context_a0a2e64aa9bcbde9bc40ae0f3882860fa}{Energy\+Hub\+Context}} (IConfiguration configuration)
+\begin{DoxyCompactList}\small\item\em Initializes a new instance of the Energy\+Hub\+Context class with the specified configuration. \end{DoxyCompactList}\item 
+\Hypertarget{class_energy_insight_hub_1_1_data_1_1_energy_hub_context_a107c8eb26bae4939fff764a778d756ce}\label{class_energy_insight_hub_1_1_data_1_1_energy_hub_context_a107c8eb26bae4939fff764a778d756ce} 
+void {\bfseries Reset\+DB} ()
+\begin{DoxyCompactList}\small\item\em Resets the database by removing existing readings and adding test readings from a CSV file. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_energy_insight_hub_1_1_data_1_1_energy_hub_context_a3b589231eb88a1b61cb72b71a6ca3410}\label{class_energy_insight_hub_1_1_data_1_1_energy_hub_context_a3b589231eb88a1b61cb72b71a6ca3410} 
+override void {\bfseries On\+Configuring} (Db\+Context\+Options\+Builder options\+Builder)
+\begin{DoxyCompactList}\small\item\em Configures the database connection using the provided options. \end{DoxyCompactList}\item 
+\Hypertarget{class_energy_insight_hub_1_1_data_1_1_energy_hub_context_a98938a9de3842554371b4436a2458d90}\label{class_energy_insight_hub_1_1_data_1_1_energy_hub_context_a98938a9de3842554371b4436a2458d90} 
+override void {\bfseries On\+Model\+Creating} (Model\+Builder model\+Builder)
+\begin{DoxyCompactList}\small\item\em Configures the entity models and relationships for the database. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_energy_insight_hub_1_1_data_1_1_energy_hub_context_afef3ff125150d4181388fafa45c4fe81}\label{class_energy_insight_hub_1_1_data_1_1_energy_hub_context_afef3ff125150d4181388fafa45c4fe81} 
+readonly IConfiguration {\bfseries Configuration}
+\begin{DoxyCompactList}\small\item\em The configuration instance used for database connection settings. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_energy_insight_hub_1_1_data_1_1_energy_hub_context_ab8748b6433b1386ff4d0152bdc6822d1}\label{class_energy_insight_hub_1_1_data_1_1_energy_hub_context_ab8748b6433b1386ff4d0152bdc6822d1} 
+Db\+Set$<$ \mbox{\hyperlink{class_energy_insight_hub_1_1_models_1_1_reading}{Reading}} $>$ {\bfseries Readings}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Represents a database table for storing readings. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Represents the database context for the \doxylink{namespace_energy_insight_hub}{Energy\+Insight\+Hub} application. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_energy_insight_hub_1_1_data_1_1_energy_hub_context_a0a2e64aa9bcbde9bc40ae0f3882860fa}\label{class_energy_insight_hub_1_1_data_1_1_energy_hub_context_a0a2e64aa9bcbde9bc40ae0f3882860fa} 
+\index{EnergyInsightHub.Data.EnergyHubContext@{EnergyInsightHub.Data.EnergyHubContext}!EnergyHubContext@{EnergyHubContext}}
+\index{EnergyHubContext@{EnergyHubContext}!EnergyInsightHub.Data.EnergyHubContext@{EnergyInsightHub.Data.EnergyHubContext}}
+\doxysubsubsection{\texorpdfstring{EnergyHubContext()}{EnergyHubContext()}}
+{\footnotesize\ttfamily Energy\+Insight\+Hub.\+Data.\+Energy\+Hub\+Context.\+Energy\+Hub\+Context (\begin{DoxyParamCaption}\item[{IConfiguration}]{configuration }\end{DoxyParamCaption})}
+
+
+
+Initializes a new instance of the Energy\+Hub\+Context class with the specified configuration. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em configuration} & The configuration instance.\\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Data/Energy\+Hub\+Context.\+cs\end{DoxyCompactItemize}
