@@ -31,7 +31,7 @@ public class MeterReaderService {
     {
         string directoryPath = "MeterReader"; // Path to meter reader script
         string scriptName = "MeterReader.py";       // Meter Reader script
-        string command = $"py {scriptName}";        // command to execute
+        string command = $"python {scriptName}";        // command to execute
 
         // Create a process start info object
         ProcessStartInfo startInfo = new() {

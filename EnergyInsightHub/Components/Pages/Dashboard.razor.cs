@@ -144,18 +144,17 @@ public partial class Dashboard : ComponentBase {
     /// Resets the database to default values, and moves meter images back into the test folder.
     /// </summary>
     private async void ResetDatabase() {
-        var _context = await EnergyHubContextFactory.CreateDbContextAsync();
-
-        if (_context != null) {
-            _context.ResetDB();
-        }
-
         string sourceDir = "MeterReader";
         string destinationDir = "TestMeterImages";
         List<string> imageFiles = Directory.GetFiles(sourceDir, "*.png").ToList();
         foreach (string image in imageFiles) {
             string newImageDir = Path.Combine(destinationDir, Path.GetFileName(image));
             File.Move(image, newImageDir);
+        }
+
+        var _context = await EnergyHubContextFactory.CreateDbContextAsync();
+        if (_context != null) {
+            _context.ResetDB();
         }
 
         LoadReads();

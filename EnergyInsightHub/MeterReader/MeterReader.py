@@ -3,7 +3,6 @@ import cv2 #image manpiulation
 import os #file access
 import platform
 import sqlite3 #execute sql
-import re
 import subprocess #execute linux commands
 import imageio.v2 as imageio #trying this to open images, cv2 stopped working in linux :-(
 import pytesseract
