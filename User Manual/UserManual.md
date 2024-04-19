@@ -1,5 +1,5 @@
 # Energy Insight Hub
-## User Manual
+### User Manual
 
 # Table of Contents
 1. [Introduction](#introduction)
