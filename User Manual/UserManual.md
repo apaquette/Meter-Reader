@@ -1,26 +1,13 @@
-# Contents
-
-[Introduction [1](#introduction)](#introduction)
-
-[System Requirements [1](#system-requirements)](#system-requirements)
-
-[Installation Instructions
-[1](#installation-instructions)](#installation-instructions)
-
-[Step 1: Install Python
-[1](#step-1-install-python)](#step-1-install-python)
-
-[Step 2: Install pip [2](#step-2-install-pip)](#step-2-install-pip)
-
-[Step 3: Install Required Libraries
-[2](#step-3-install-required-libraries)](#step-3-install-required-libraries)
-
-[User Interface Overview
-[2](#user-interface-overview)](#user-interface-overview)
-
-[Usage Instructions [3](#usage-instructions)](#usage-instructions)
-
-[Troubleshooting [3](#troubleshooting)](#troubleshooting)
+# Table of Contents
+1. [Introduction](#introduction)
+2. [System Requirements](#system-requirements)
+3. [Installation Instructions](#installation-instructions)
+   1. Step 1: [Install Python](##step-1-install-python)
+   2. Step 2: [Install pip](##step-2-install-pip)
+   3. Step 3: [Install Required Libraries](##step-3-install-required-libraries)
+4. [User Interface Overview](#user-interface-overview)
+5. [Usage Instructions](#usage-instructions)
+6. [Troubleshooting](#troubleshooting)
 
 # Introduction
 
