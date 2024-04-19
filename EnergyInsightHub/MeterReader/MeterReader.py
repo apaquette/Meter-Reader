@@ -16,13 +16,22 @@ from sqlite3 import Error
 
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR/tesseract.exe'
 
+# Set golbal variables
 database = ""
 updateFile = ""
 fileSeperator = ""
 
-### CREATE READ WHEN PHOTO IS ADDED TO FOLDER
 class PhotoHandler(FileSystemEventHandler):
+    """
+    Event handler for monitoring photo creation events in a folder.
+    """
     def on_created(self, event):
+        """
+        Process newly created photo files.
+
+        Args:
+            event (FileSystemEvent): The event triggered by file creation.
+        """
         if event.is_directory:
             return
         elif event.event_type == 'created' and event.src_path.lower().endswith('png'):
@@ -48,12 +57,15 @@ class PhotoHandler(FileSystemEventHandler):
                 print(f'failed to read')
                 print(e)
 
-### CREATE CONNECTION WITH DATEABASE FILE
 def create_connection(db_file):
-    """ create a database connection to the SQLite database
-        specified by db_file
-    :param db_file: database file
-    :return: Connection object or None
+    """
+    Create a connection to the SQLite database.
+
+    Args:
+        db_file (str): The path to the database file.
+
+    Returns:
+        Connection: A connection object to the SQLite database.
     """
     conn = None
     try:
@@ -63,8 +75,13 @@ def create_connection(db_file):
 
     return conn
 
-## INSERT READING INTO DATABASE
 def insert_reading(reading):
+    """
+    Insert a reading into the database.
+
+    Args:
+        reading (tuple): A tuple containing the reading data to be inserted.
+    """
     conn = create_connection(database)
     with conn:
         sql = ''' INSERT INTO Readings(EnergyMeterId,MicrocontrollerId,Time,Amount)
@@ -79,8 +96,16 @@ def insert_reading(reading):
     f.write("Updated")
     f.close()
 
-### READ METER ALGORITHM
 def read_meter_ssocr(meterPhoto):
+    """
+    Read meter value using SSOCR app in Linux.
+
+    Args:
+        meterPhoto (str): The path to the meter photo.
+
+    Returns:
+        float: The meter reading.
+    """
     image = imageio.imread(meterPhoto)
     crop_image = image[935:1066, 1122:1590]#image[415:485, 385:665] #old values
     rgb = cv2.cvtColor(crop_image, cv2.COLOR_BGR2RGB)
@@ -90,16 +115,26 @@ def read_meter_ssocr(meterPhoto):
     value = output.communicate()[0].decode("utf-8")
     return float(value)
 
-### OLD READ METER ALGORITHM (USING NON SEVEN-SEGMENT IMAGES)
 def read_meter_old(meterPhoto):
+    """
+    Read meter value using Tesseract OCR. Does not support reading seven-segment digits.
+
+    Args:
+        meterPhoto (str): The path to the meter photo.
+
+    Returns:
+        float: The meter reading.
+    """
     image = cv2.imread(meterPhoto)
     crop_image = image[415:485, 385:665]
     rgb = cv2.cvtColor(crop_image, cv2.COLOR_BGR2RGB)
     # OCR the input image using Tesseract
     return float(pytesseract.image_to_string(rgb, config=""))
 
-### MAIN METHOD
 def main():
+    """
+    Main function to start the photo handling service.
+    """
     global fileSeperator
 
     match platform.system():

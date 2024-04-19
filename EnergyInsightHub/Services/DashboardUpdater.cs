@@ -4,14 +4,28 @@ using Microsoft.Data.Sqlite;
 
 namespace EnergyInsightHub.Services;
 
+/// <summary>
+/// Monitors a file for changes and updates the dashboard accordingly.
+/// </summary>
 public class DashboardUpdater
 {
-    private FileSystemWatcher watcher;
-    private readonly IHubContext<DashboardHub> hubContext;
+    /// <summary>
+    /// The file system watcher instance.
+    /// </summary>
+    private FileSystemWatcher Watcher { get; set; }
+    /// <summary>
+    /// The SignalR hub context for communicating with clients. See <see cref="DashboardUpdater"/>
+    /// </summary>
+    private readonly IHubContext<DashboardHub> HubContext;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="DashboardUpdater"/> class.
+    /// </summary>
+    /// <param name="configuration">The configuration instance.</param>
+    /// <param name="hubContext">The SignalR hub context for updating the dashboard.</param>
     public DashboardUpdater(IConfiguration configuration, IHubContext<DashboardHub> hubContext)
     {
-        this.hubContext = hubContext;
+        HubContext = hubContext;
 
         string connectionString = configuration.GetConnectionString("EnergyHubDB");
         var connectionStringBuilder = new SqliteConnectionStringBuilder(connectionString);
@@ -19,16 +33,19 @@ public class DashboardUpdater
         string directoryPath = Path.GetDirectoryName(connectionStringBuilder.DataSource);
         string fileName = Path.GetFileName(connectionStringBuilder.DataSource);
 
-        watcher = new();
-        watcher.Path = "Data";// directoryPath;
-        watcher.Filter = "update.txt";// fileName;
-        watcher.NotifyFilter = NotifyFilters.LastWrite;
-        watcher.Changed += OnFileChanged;
-        watcher.EnableRaisingEvents = true;
+        Watcher = new();
+        Watcher.Path = "Data";// directoryPath;
+        Watcher.Filter = "update.txt";// fileName;
+        Watcher.NotifyFilter = NotifyFilters.LastWrite;
+        Watcher.Changed += OnFileChanged;
+        Watcher.EnableRaisingEvents = true;
     }
 
+    /// <summary>
+    /// Handles the file change event and updates the dashboard.
+    /// </summary>
     private async void OnFileChanged(object sender, FileSystemEventArgs e)
     {
-        await hubContext.Clients.All.SendAsync("UpdateDashboard");
+        await HubContext.Clients.All.SendAsync("UpdateDashboard");
     }
 }

@@ -1,5 +1,13 @@
-﻿namespace EnergyInsightHub.Services; 
+﻿namespace EnergyInsightHub.Services;
+/// <summary>
+/// Service for transmitting images from one directory to another.
+/// </summary>
+/// <remarks>This service simulates the hardware component of the solution.</remarks>
 public class TransmissionService {
+    /// <summary>
+    /// Transmits images from one directory to another asynchronously with a 2.5 second delay between transmissions.
+    /// </summary>
+    /// <returns>A task representing the asynchronous operation.</returns>
     public async Task TransmitImages() {
         await Task.Run(() =>
         {
