@@ -1,6 +1,6 @@
 # Energy Insight Hub
 
-# Table of Contents
+## Table of Contents
 1. [Introduction](#introduction)
 2. [System Requirements](#system-requirements)
 3. [Installation Instructions](#installation-instructions)
@@ -11,7 +11,7 @@
 5. [Usage Instructions](#usage-instructions)
 6. [Troubleshooting](#troubleshooting)
 
-# Introduction
+## Introduction
 
 Welcome to the Energy Insight Hub user manual! This manual provides
 guidance on installing and using the web app, which serves as a proof of
@@ -19,7 +19,7 @@ concept for an energy meter reader. The web app showcases the technology
 involved in transmitting images of a meter, extracting readings from the
 images, and displaying the data in a live dashboard.
 
-# System Requirements
+## System Requirements
 
 **Operating System**: Windows (only supported platform)
 
@@ -27,9 +27,9 @@ images, and displaying the data in a live dashboard.
 
 **Web Browser**: Firefox, Chrome (recommended)
 
-# Installation Instructions
+## Installation Instructions
 
-## Step 1: Install Python
+### Step 1: Install Python
 
 1.  Download and install the latest version of Python for Windows from
     [Python Downloads](https://www.python.org/downloads/windows/).
@@ -45,7 +45,7 @@ images, and displaying the data in a live dashboard.
     --version\` to verify the installation. You should see the installed
     Python version.
 
-## Step 2: Install pip
+### Step 2: Install pip
 
 1.  Download the pip [installation
     script](https://bootstrap.pypa.io/get-pip.py).
@@ -56,7 +56,7 @@ images, and displaying the data in a live dashboard.
 3.  After installation, verify that pip is installed by typing \`pip
     --version\`.
 
-## Step 3: Install Required Libraries
+### Step 3: Install Required Libraries
 
 1.  Open Command Prompt.
 
@@ -65,7 +65,7 @@ images, and displaying the data in a live dashboard.
 3.  Run the following command to install the required libraries using
     pip: \`pip install opencv-python imageio pytesseract watchdog\`
 
-# User Interface Overview
+## User Interface Overview
 
 The Energy Insight Hub web app features a live dashboard with the
 following components:
@@ -82,7 +82,7 @@ following components:
 
 <img src="dashboard.png" style="width:6.5in;height:2.29167in" />
 
-# Usage Instructions
+## Usage Instructions
 
 1.  To start using the web app, run the EnergyInsightHub.exe file and
     note the address hosting the web app.
@@ -95,7 +95,7 @@ following components:
 4.  If needed, click the "Reset" button to reset the database to default
     values.
 
-# Troubleshooting
+## Troubleshooting
 
 If you encounter any issues during installation or usage
 
