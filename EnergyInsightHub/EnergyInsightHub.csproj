@@ -9,7 +9,10 @@
 
   <ItemGroup>
     <None Remove="Data\EnergyHub.db" />
+    <None Remove="Data\testData.csv" />
     <None Remove="Data\update.txt" />
+    <None Remove="MeterReader\MeterReader.py" />
+    <None Remove="pid.txt" />
     <None Remove="TestMeterImages\0_0_2023-12-22 130000.png" />
     <None Remove="TestMeterImages\0_0_2023-12-22 140000.png" />
     <None Remove="TestMeterImages\0_0_2023-12-22 150000.png" />
@@ -21,47 +24,84 @@
     <None Remove="TestMeterImages\0_0_2023-12-22 210000.png" />
     <None Remove="TestMeterImages\0_0_2023-12-22 220000.png" />
     <None Remove="TestMeterImages\0_0_2023-12-22 230000.png" />
+    <None Remove="TestMeterImages\0_0_2023-12-23 000000.png" />
+    <None Remove="TestMeterImages\0_0_2023-12-23 010000.png" />
+    <None Remove="TestMeterImages\0_0_2023-12-23 020000.png" />
+    <None Remove="TestMeterImages\0_0_2023-12-23 030000.png" />
+    <None Remove="TestMeterImages\0_0_2023-12-23 040000.png" />
+    <None Remove="TestMeterImages\0_0_2023-12-23 050000.png" />
+    <None Remove="TestMeterImages\0_0_2023-12-23 060000.png" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="Data\EnergyHub.db">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\testData.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Data\update.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="MeterReader\MeterReader.py">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="pid.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="TestMeterImages\0_0_2023-12-22 130000.png">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="TestMeterImages\0_0_2023-12-22 140000.png">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="TestMeterImages\0_0_2023-12-22 150000.png">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="TestMeterImages\0_0_2023-12-22 160000.png">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="TestMeterImages\0_0_2023-12-22 170000.png">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="TestMeterImages\0_0_2023-12-22 180000.png">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="TestMeterImages\0_0_2023-12-22 190000.png">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="TestMeterImages\0_0_2023-12-22 200000.png">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="TestMeterImages\0_0_2023-12-22 210000.png">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="TestMeterImages\0_0_2023-12-22 220000.png">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="TestMeterImages\0_0_2023-12-22 230000.png">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestMeterImages\0_0_2023-12-23 000000.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestMeterImages\0_0_2023-12-23 010000.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestMeterImages\0_0_2023-12-23 020000.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestMeterImages\0_0_2023-12-23 030000.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestMeterImages\0_0_2023-12-23 040000.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestMeterImages\0_0_2023-12-23 050000.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestMeterImages\0_0_2023-12-23 060000.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 
@@ -74,12 +114,6 @@
     </PackageReference>
     <PackageReference Include="Radzen.Blazor" Version="4.23.4" />
     <PackageReference Include="System.Management" Version="8.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="MeterReader\MeterReader.py">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 
 </Project>

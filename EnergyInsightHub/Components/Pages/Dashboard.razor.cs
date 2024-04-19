@@ -100,11 +100,14 @@ public partial class Dashboard : ComponentBase {
                     if (readings.Count < 24) {
                         readings = PadReadings(readings);
                     }
-
+                    decimal last = readings?.Last(r => r != null)?.Amount ?? 0;
+                    decimal first = readings?.First(r => r != null)?.Amount ?? 0;
+                    decimal Total = last - first;
                     GridRows.Add(
                         new() {
                             Date = date,
-                            Readings = readings
+                            Readings = readings,
+                            Total = Total
                         }
                     );
                     ChartColumns.AddRange(columns);
@@ -175,7 +178,7 @@ public partial class Dashboard : ComponentBase {
         /// <summary>
         /// The total amount of energy consumed in that day. Calculated by subtracting the last read from the first read.
         /// </summary>
-        public decimal? Total => Readings?.Last(r => r != null)?.Amount ?? 0 - Readings?.First(r => r != null)?.Amount ?? 0;
+        public decimal? Total { get; set; }
     }
 
     /// <summary>
