@@ -47,8 +47,8 @@ images, and displaying the data in a live dashboard.
 
 2.  Run the downloaded installer.
 
-3.  During installation, ensure to check the box that says “Add Python
-    to PATH”.
+3.  During installation, ensure to check the box that says "Add Python
+    to PATH".
 
 4.  Follow the prompts to complete the installation.
 
@@ -91,7 +91,7 @@ following components:
 
   - Start Transmission: Simulates the transmission of Data
 
-<img src="media/image1.png" style="width:6.5in;height:2.29167in" />
+<img src="dashboard.png" style="width:6.5in;height:2.29167in" />
 
 # Usage Instructions
 
@@ -100,10 +100,10 @@ following components:
 
 2.  Open a web browser and navigate to the hosting address.
 
-3.  Click the “Start Transmission” button to simulate the transmission
+3.  Click the "Start Transmission" button to simulate the transmission
     of data.
 
-4.  If needed, click the “Reset” button to reset the database to default
+4.  If needed, click the "Reset" button to reset the database to default
     values.
 
 # Troubleshooting
