@@ -4,6 +4,7 @@ using EnergyInsightHub.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace EnergyInsightHub.Components.Pages;
 
@@ -74,11 +75,16 @@ public partial class Dashboard : ComponentBase {
         Intervals = new();
         StepValue = TimeSpan.FromHours(1);
 
+        
+
+
         var _context = await EnergyHubContextFactory.CreateDbContextAsync();
         if (_context != null) {
             try {
                 var days = _context.Readings.ToList().GroupBy(item => item.Time.Date);
+
                 _context.Dispose();
+
                 foreach (var day in days) {
                     var date = day.Key;
                     List<Reading?> readings = day?.OrderBy(r => r.Time)?.ToList();
@@ -87,14 +93,7 @@ public partial class Dashboard : ComponentBase {
                         XAxisData = r.Amount,
                         YAxisData = r.Time
                     }).ToList() ?? new();
-                    for (int i = 1; i < columns.Count; ++i) {
-                        TimeSpan timeDifference = columns[i].YAxisData - columns[i - 1].YAxisData;
-
-                        if (timeDifference == TimeSpan.FromHours(1)) {
-                            decimal intervalAmount = columns[i].XAxisData - columns[i - 1].XAxisData;
-                            Intervals.Add(new ChartData { XAxisData = intervalAmount, YAxisData = columns[i].YAxisData });
-                        }
-                    }
+                    
 
                     //handle missing readings
                     if (readings.Count < 24) {
@@ -111,13 +110,26 @@ public partial class Dashboard : ComponentBase {
                         }
                     );
                     ChartColumns.AddRange(columns);
+                    
 
-                    if(ChartColumns.Count > 0) {
+                    if(GridRows.Count > 0) {
                         int count = ChartColumns.Count / 10;
                         if (count < 1) count = 1;
                         StepValue = TimeSpan.FromHours(count);
                     }
                 }
+
+                List<ChartData> temptInterval = new();
+                for (int i = 1; i < ChartColumns.Count; ++i) {
+                    TimeSpan timeDifference = ChartColumns[i].YAxisData - ChartColumns[i - 1].YAxisData;
+
+                    if (timeDifference == TimeSpan.FromHours(1)) {
+                        decimal intervalAmount = ChartColumns[i].XAxisData - ChartColumns[i - 1].XAxisData;
+                        temptInterval.Add(new ChartData { XAxisData = intervalAmount, YAxisData = ChartColumns[i].YAxisData });
+                    }
+                }
+
+                Intervals = new(temptInterval);
             }
             catch (Exception ex) {
                 Console.WriteLine(ex.Message);
@@ -152,7 +164,17 @@ public partial class Dashboard : ComponentBase {
         List<string> imageFiles = Directory.GetFiles(sourceDir, "*.png").ToList();
         foreach (string image in imageFiles) {
             string newImageDir = Path.Combine(destinationDir, Path.GetFileName(image));
-            File.Move(image, newImageDir);
+            try {
+                File.Move(image, newImageDir);
+            }
+            catch(Exception e) {
+                if(e.Message == "Cannot create a file when that file already exists.") {
+                    File.Delete(newImageDir);
+                }
+                else {
+                    Console.Write(e.Message);
+                }
+            }
         }
 
         var _context = await EnergyHubContextFactory.CreateDbContextAsync();
